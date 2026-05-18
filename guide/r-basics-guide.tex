@@ -1,0 +1,222 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\title{R Basics and Assignment Workflow Guide}
+\author{Big-Ahh-R-Repo}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{What is R?}
+R is a language for statistics, data analysis, and visualization. You can use it for homework, projects, and reports.
+
+\section{Getting Started}
+\subsection{Install R and RStudio}
+\begin{enumerate}[leftmargin=*]
+  \item Install R from \url{https://cran.r-project.org/}.
+  \item Install RStudio Desktop from \url{https://posit.co/download/rstudio-desktop/}.
+\end{enumerate}
+
+\subsection{RStudio Layout}
+You will mostly use:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Script editor}: write \texttt{.R} and \texttt{.Rmd} files.
+  \item \textbf{Console}: run code interactively.
+  \item \textbf{Environment}: inspect created objects.
+  \item \textbf{Plots/Files/Packages/Help}: visualize data and find help.
+\end{itemize}
+
+\section{Core R Basics}
+\subsection{Objects and Assignment}
+Use \texttt{<-} for assignment.
+\begin{verbatim}
+x <- 10
+y <- 5
+z <- x + y
+\end{verbatim}
+
+\subsection{Data Types}
+\begin{itemize}[leftmargin=*]
+  \item Numeric: \texttt{3.14}
+  \item Integer: \texttt{2L}
+  \item Character: \texttt{"hello"}
+  \item Logical: \texttt{TRUE}, \texttt{FALSE}
+  \item Factor: categorical values
+\end{itemize}
+
+\subsection{Vectors}
+\begin{verbatim}
+scores <- c(88, 92, 79, 95)
+mean(scores)
+length(scores)
+summary(scores)
+\end{verbatim}
+
+\subsection{Matrices and Lists}
+\begin{verbatim}
+m <- matrix(1:6, nrow = 2, byrow = TRUE)
+student <- list(name = "Alex", id = 101, grades = scores)
+\end{verbatim}
+
+\subsection{Data Frames}
+\begin{verbatim}
+df <- data.frame(
+  name = c("Ana", "Ben", "Cara"),
+  exam1 = c(90, 82, 87),
+  exam2 = c(93, 79, 91)
+)
+
+str(df)
+head(df)
+df$average <- (df$exam1 + df$exam2) / 2
+\end{verbatim}
+
+\section{Control Flow and Functions}
+\subsection{Conditionals}
+\begin{verbatim}
+score <- 84
+if (score >= 90) {
+  grade <- "A"
+} else if (score >= 80) {
+  grade <- "B"
+} else {
+  grade <- "C or below"
+}
+\end{verbatim}
+
+\subsection{Loops}
+\begin{verbatim}
+for (i in 1:3) {
+  print(i)
+}
+\end{verbatim}
+
+\subsection{Functions}
+\begin{verbatim}
+calc_percent <- function(points, total) {
+  (points / total) * 100
+}
+
+calc_percent(45, 50)
+\end{verbatim}
+
+\section{Useful Data Work}
+\subsection{Read and Write Files}
+\begin{verbatim}
+# Base R
+students <- read.csv("data/raw/students.csv")
+write.csv(students, "data/processed/students_clean.csv", row.names = FALSE)
+\end{verbatim}
+
+\subsection{Common Base R Operations}
+\begin{verbatim}
+subset(df, exam1 >= 85)
+transform(df, passed = average >= 70)
+aggregate(average ~ name, data = df, FUN = mean)
+\end{verbatim}
+
+\section{Plotting Basics}
+\begin{verbatim}
+plot(df$exam1, df$exam2,
+     main = "Exam 1 vs Exam 2",
+     xlab = "Exam 1",
+     ylab = "Exam 2")
+
+hist(scores, main = "Score Distribution", xlab = "Score")
+boxplot(scores, main = "Scores")
+\end{verbatim}
+
+\section{Packages and Reproducibility}
+\subsection{Install and Load Packages}
+\begin{verbatim}
+install.packages("rmarkdown")
+install.packages("tidyverse")
+library(rmarkdown)
+library(tidyverse)
+\end{verbatim}
+
+\subsection{Good Habits}
+\begin{itemize}[leftmargin=*]
+  \item Keep code in scripts, not only in the console.
+  \item Use relative file paths inside the project folder.
+  \item Save outputs (tables/plots) in dedicated folders.
+  \item Comment your logic and cite data sources.
+\end{itemize}
+
+\section{R Markdown for School Assignments}
+\subsection{Why R Markdown?}
+R Markdown combines code, narrative, and output into one reproducible report.
+
+\subsection{Minimal Structure}
+An \texttt{.Rmd} file contains:
+\begin{itemize}[leftmargin=*]
+  \item YAML header (title/author/date/output)
+  \item Narrative text in Markdown
+  \item Code chunks in R
+\end{itemize}
+
+\subsection{Basic R Markdown Example}
+\begin{verbatim}
+---
+title: "Homework 1"
+author: "Your Name"
+output: html_document
+---
+
+```{r}
+x <- c(2, 4, 6, 8)
+mean(x)
+```
+\end{verbatim}
+
+\subsection{Render from Console}
+\begin{verbatim}
+rmarkdown::render("report.Rmd")
+\end{verbatim}
+
+\section{Recommended Assignment Workflow}
+\begin{enumerate}[leftmargin=*]
+  \item Create one project folder per assignment.
+  \item Put raw data in \texttt{data/raw/} and cleaned data in \texttt{data/processed/}.
+  \item Write analysis helpers in \texttt{analysis.R}.
+  \item Write submission in \texttt{report.Rmd}.
+  \item Knit or render before submitting.
+\end{enumerate}
+
+\section{Debugging and Help}
+\begin{itemize}[leftmargin=*]
+  \item Read error messages from top to bottom.
+  \item Use \texttt{str()}, \texttt{head()}, and \texttt{summary()} often.
+  \item Use \texttt{?function_name} for help pages.
+  \item Search examples in package vignettes and documentation.
+\end{itemize}
+
+\section{Quick Reference Table}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Task & Example \\
+\midrule
+Create vector & \texttt{c(1, 2, 3)} \\
+Filter rows & \texttt{subset(df, score > 80)} \\
+Add column & \texttt{df$new <- ...} \\
+Read CSV & \texttt{read.csv("file.csv")} \\
+Write CSV & \texttt{write.csv(df, "out.csv", row.names = FALSE)} \\
+Render report & \texttt{rmarkdown::render("report.Rmd")} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Next Steps}
+Practice by editing the assignment template in this repository. Start small, run your code frequently, and keep your work reproducible.
+
+\end{document}
