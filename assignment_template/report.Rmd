@@ -1,0 +1,40 @@
+---
+title: "Assignment Report"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+---
+
+## Setup
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+source("analysis.R")
+```
+
+## Load data
+
+```{r}
+# Update the file path to your assignment dataset
+df <- load_assignment_data("data/raw/students.csv")
+head(df)
+```
+
+## Transform data
+
+```{r}
+df <- add_exam_average(df, "exam1", "exam2")
+summary(df$average)
+```
+
+## Visualization
+
+```{r}
+hist(df$average, main = "Average Score Distribution", xlab = "Average")
+```
+
+## Conclusions
+
+Write your interpretation here.
