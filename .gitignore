@@ -54,3 +54,6 @@ rsconnect/
 *.out
 *.toc
 .positai
+
+**/data/raw/*
+**/data/processed/*
