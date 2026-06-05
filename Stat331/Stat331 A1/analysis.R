@@ -56,8 +56,8 @@ low <- summary(slr)$coefficients[2,1] - summary(slr)$coefficients[2,2] * t57_097
 high <- summary(slr)$coefficients[2,1] + summary(slr)$coefficients[2,2] * t57_0975
 c(low,high)
 #g)
-alpha <- x* summary(slr)$coefficients[2,1] - y
-t.test(alpha, mu=0)
+alpha <- summary(slr)$coefficients[1,4]
+alpha
 #h)
   #i) alpha hat:
 alphahat <- ybar - xbar* summary(slr)$coefficients[2,1] 
@@ -74,25 +74,23 @@ summary(slr)$coefficients[2,4]
 truebeta <- c(-200000, 45, -300, 10000, 150000)
 truesigma <- 12000
 A1_variates <- read_table('~/Documents/GitHub/Big-Ahh-R-Repo/Stat331/Stat331 A1/data/raw/A1_variates (1).txt')
-n <- length(A1_variates)
+n <- nrow(A1_variates)
+n
 X <- as.matrix(cbind(rep(1,n),A1_variates))
-set.seed(21066922)       
+set.seed(21066922)
 
 ?rnorm
 #a)
-simulatedresponse <- (truebeta[1]*(rep(1,n)) + 
-                      truebeta[2]*A1_variates$size + 
-                      truebeta[3]*A1_variates$age + 
-                      truebeta[4]*A1_variates$employees + 
-                      truebeta[5]*A1_variates$col + 
-                      rnorm(n,0,truesigma))
-
+simulatedresponse <- (as.vector(X %*% truebeta) + rnorm(n,0,truesigma))
+#this is the simulated data with the random seed set to my student number
 simulatedresponse
-             
-polarxy <- function(theta=NULL,r=NULL){
-  
-  r <- 2
-  r*c(cos(theta),sin(theta))
-}
 
-polarxy(0,60)
+#b)
+y <- simulatedresponse
+mlr <- lm(y~A1_variates$size+A1_variates$age+A1_variates$employees+A1_variates$col)
+summary(mlr)
+
+#c)
+betashat <- solve(t(X)%*%X)%*%t(X) %*% y
+#d)
+confint(mlr)
