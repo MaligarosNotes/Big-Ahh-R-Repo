@@ -1,0 +1,576 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Stat331 Assignment 1},
+  pdfauthor={Milagro Chen (21066922)},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Stat331 Assignment 1}
+\author{Milagro Chen (21066922)}
+\date{2026-06-06}
+
+\begin{document}
+\maketitle
+
+\section{Set up}\label{set-up}
+
+Here are the libraries used:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(data.table)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'data.table'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     %notin%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+## v dplyr     1.2.1     v readr     2.2.0
+## v forcats   1.0.1     v stringr   1.6.0
+## v ggplot2   4.0.3     v tibble    3.3.1
+## v lubridate 1.9.5     v tidyr     1.3.2
+## v purrr     1.2.2
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::between()     masks data.table::between()
+## x dplyr::filter()      masks stats::filter()
+## x dplyr::first()       masks data.table::first()
+## x lubridate::hour()    masks data.table::hour()
+## x lubridate::isoweek() masks data.table::isoweek()
+## x lubridate::isoyear() masks data.table::isoyear()
+## x dplyr::lag()         masks stats::lag()
+## x dplyr::last()        masks data.table::last()
+## x lubridate::mday()    masks data.table::mday()
+## x lubridate::minute()  masks data.table::minute()
+## x lubridate::month()   masks data.table::month()
+## x lubridate::quarter() masks data.table::quarter()
+## x lubridate::second()  masks data.table::second()
+## x purrr::transpose()   masks data.table::transpose()
+## x lubridate::wday()    masks data.table::wday()
+## x lubridate::week()    masks data.table::week()
+## x lubridate::yday()    masks data.table::yday()
+## x lubridate::year()    masks data.table::year()
+## i Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+\end{verbatim}
+
+\section{Question 1}\label{question-1}
+
+First we clean the original csv file to be in accordance with the
+assignment. We want BB and TSXC to be percent change, and GVTB10 to be
+in monthly rates instead of yearly. We also drop the old columns and
+OTEX from the dataframe. On top of that, we want the very first row to
+be removed, as it has an undefined percentage change from the month
+previous(it doesn't have a previous month).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{CAPM\_S26 }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{\textquotesingle{}\textasciitilde{}/Documents/GitHub/Big{-}Ahh{-}R{-}Repo/Stat331/Stat331 A1/data/raw/CAPM\_S26.csv\textquotesingle{}}\NormalTok{)}
+\NormalTok{capm\_s26 }\OtherTok{\textless{}{-}}\NormalTok{ CAPM\_S26}
+\NormalTok{capm\_s26}\SpecialCharTok{$}\NormalTok{bb\_Percent }\OtherTok{\textless{}{-}}\NormalTok{ (CAPM\_S26}\SpecialCharTok{$}\NormalTok{BB }\SpecialCharTok{{-}} \FunctionTok{lag}\NormalTok{(CAPM\_S26}\SpecialCharTok{$}\NormalTok{BB, }\DecValTok{1}\NormalTok{) ) }\SpecialCharTok{/} \FunctionTok{lag}\NormalTok{(CAPM\_S26}\SpecialCharTok{$}\NormalTok{BB, }\DecValTok{1}\NormalTok{)}
+\NormalTok{capm\_s26}\SpecialCharTok{$}\NormalTok{tsxc\_Percent }\OtherTok{\textless{}{-}}\NormalTok{ (CAPM\_S26}\SpecialCharTok{$}\NormalTok{TSXC }\SpecialCharTok{{-}} \FunctionTok{lag}\NormalTok{(CAPM\_S26}\SpecialCharTok{$}\NormalTok{TSXC, }\DecValTok{1}\NormalTok{) ) }\SpecialCharTok{/} \FunctionTok{lag}\NormalTok{(CAPM\_S26}\SpecialCharTok{$}\NormalTok{TSXC, }\DecValTok{1}\NormalTok{)}
+\NormalTok{capm\_s26}\SpecialCharTok{$}\NormalTok{gvtb10\_monthly }\OtherTok{\textless{}{-}}\NormalTok{ (((CAPM\_S26}\SpecialCharTok{$}\NormalTok{GVTB10 }\SpecialCharTok{/} \DecValTok{100}\NormalTok{) }\SpecialCharTok{+} \DecValTok{1}\NormalTok{) }\SpecialCharTok{**}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{/}\DecValTok{12}\NormalTok{)) }\SpecialCharTok{{-}}\DecValTok{1}
+
+\NormalTok{capm\_s26 }\OtherTok{\textless{}{-}}\NormalTok{ capm\_s26[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+Moving forward, we will define x and y to be the excess return of the
+TSXC and BB respectively:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ capm\_s26}\SpecialCharTok{$}\NormalTok{bb\_Percent }\SpecialCharTok{{-}}\NormalTok{ capm\_s26}\SpecialCharTok{$}\NormalTok{gvtb10\_monthly}
+\NormalTok{x }\OtherTok{\textless{}{-}}\NormalTok{ capm\_s26}\SpecialCharTok{$}\NormalTok{tsxc\_Percent }\SpecialCharTok{{-}}\NormalTok{ capm\_s26}\SpecialCharTok{$}\NormalTok{gvtb10\_monthly}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{a)}\label{a}
+
+Here is the plot. Fitting a line of best fit, we see the slope is
+positive, hinting that BB's beta is slightly positive. We will proceed
+to verify that claim, and see just how strong such a claim is. A linear
+model is appropriate, as the data roughly follows a linear pattern.
+There aren't too many outliers, but some months BB's excess returns are
+rather higher than TSXC.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(x, y, }
+     \AttributeTok{main=}\StringTok{"BB Excess Returns vs. Market Excess Returns"}\NormalTok{,}
+     \AttributeTok{xlab=}\StringTok{"TSXC Excess Return (x)"}\NormalTok{, }
+     \AttributeTok{ylab=}\StringTok{"BB Excess Return (y)"}\NormalTok{, }
+     \AttributeTok{pch=}\DecValTok{19}\NormalTok{, }\AttributeTok{col=}\StringTok{"darkblue"}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x), }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{lwd=}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/report_files/figure-latex/unnamed-chunk-4-1.pdf}}
+
+\subsubsection{b)}\label{b}
+
+Using R, we find the correlation coefficient to be 0.2959326:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cor}\NormalTok{(x,y)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.2959326
+\end{verbatim}
+
+\subsubsection{c)}\label{c}
+
+Manually checking, we arrive at the same number, 0.2959326:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xbar }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(x)}
+\NormalTok{ybar }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(y)}
+
+\NormalTok{xvar }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((x }\SpecialCharTok{{-}}\NormalTok{ xbar)}\SpecialCharTok{**}\DecValTok{2}\NormalTok{)}
+\NormalTok{yvar }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((y }\SpecialCharTok{{-}}\NormalTok{ ybar)}\SpecialCharTok{**}\DecValTok{2}\NormalTok{)}
+
+\NormalTok{rho }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{sum}\NormalTok{((x }\SpecialCharTok{{-}}\NormalTok{ xbar)}\SpecialCharTok{*}\NormalTok{(y }\SpecialCharTok{{-}}\NormalTok{ ybar)))}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(yvar}\SpecialCharTok{*}\NormalTok{xvar))}
+\NormalTok{rho}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.2959326
+\end{verbatim}
+
+\subsubsection{d)}\label{d}
+
+Performing the linear regression we get this summary:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{slr }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x)}
+\FunctionTok{summary}\NormalTok{(slr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.23962 -0.09829 -0.04028  0.07948  0.58667 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)  
+## (Intercept) -0.008004   0.022605  -0.354   0.7246  
+## x            1.432575   0.612471   2.339   0.0229 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1701 on 57 degrees of freedom
+## Multiple R-squared:  0.08758,    Adjusted R-squared:  0.07157 
+## F-statistic: 5.471 on 1 and 57 DF,  p-value: 0.02286
+\end{verbatim}
+
+\subsubsection{e)}\label{e}
+
+searching on
+\url{https://www.investing.com/equities/research-in-motion-ltd?cid=1055239},
+we find that our model outputted 1.43 while the website has 1.47, and on
+a deeper dive it has beta = 1.55. This is explained by different
+methodology, such as slightly different time frame of
+data(daily,yearly,etc.), slight discrepancies in data(different
+sources), and sheer amount of data(we used 59 months, whereas the
+website could be using the full 60 months)
+
+\subsubsection{f)}\label{f}
+
+Using R, we have this as our 95\% confidence interval:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{confint}\NormalTok{(slr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                   2.5 %    97.5 %
+## (Intercept) -0.05326971 0.0372623
+## x            0.20612328 2.6590266
+\end{verbatim}
+
+Specifically looking at the x variate, we see the interval is
+{[}0.20612328, 2.6590266{]}, showing that the true beta is, with 95\%
+probability, in between 0.20612328 and 2.6590266. Because the 95\%
+confidence interval contains 1, we do not have sufficient statistical
+evidence to conclude that BB's stock volatility is significantly
+different from the market volatility
+
+Manually, we get this same result:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t57\_0975 }\OtherTok{\textless{}{-}} \FunctionTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DecValTok{57}\NormalTok{)}
+\NormalTok{low }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(slr)}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{] }\SpecialCharTok{{-}} \FunctionTok{summary}\NormalTok{(slr)}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ t57\_0975}
+\NormalTok{high }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(slr)}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FunctionTok{summary}\NormalTok{(slr)}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ t57\_0975}
+\FunctionTok{c}\NormalTok{(low,high)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.2061233 2.6590266
+\end{verbatim}
+
+\subsubsection{g)}\label{g}
+
+Viewing our summary again:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(slr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.23962 -0.09829 -0.04028  0.07948  0.58667 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)  
+## (Intercept) -0.008004   0.022605  -0.354   0.7246  
+## x            1.432575   0.612471   2.339   0.0229 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1701 on 57 degrees of freedom
+## Multiple R-squared:  0.08758,    Adjusted R-squared:  0.07157 
+## F-statistic: 5.471 on 1 and 57 DF,  p-value: 0.02286
+\end{verbatim}
+
+We see that the intercept, which is interpreted as the expected excess
+return of BB given that TSXC returns 0\% after accounting for the risk
+free rate in a given month, AKA BB's alpha, is -0.008004, with a p-value
+of 0.7246, signalling that we failed to reject the null hypothesis of
+BB's alpha being 0. We can't conclude that BB has any alpha,
+statistically speaking.
+
+\subsubsection{h)}\label{h}
+
+First let's show betahat and sigmahat:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{betahat }\OtherTok{\textless{}{-}}  \FunctionTok{sum}\NormalTok{((x }\SpecialCharTok{{-}}\NormalTok{ xbar)}\SpecialCharTok{*}\NormalTok{(y }\SpecialCharTok{{-}}\NormalTok{ ybar))}\SpecialCharTok{/}\NormalTok{(xvar)}
+\NormalTok{betahat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.432575
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sigmahat }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{sum}\NormalTok{((}\FunctionTok{residuals}\NormalTok{(slr))}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{length}\NormalTok{(x)}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{))}
+\NormalTok{sigmahat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1700539
+\end{verbatim}
+
+Using these the values above, let's show alphahat and SEbetahat:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{alphahat }\OtherTok{\textless{}{-}}\NormalTok{ ybar }\SpecialCharTok{{-}}\NormalTok{ xbar}\SpecialCharTok{*} \FunctionTok{sum}\NormalTok{((x }\SpecialCharTok{{-}}\NormalTok{ xbar)}\SpecialCharTok{*}\NormalTok{(y }\SpecialCharTok{{-}}\NormalTok{ ybar))}\SpecialCharTok{/}\NormalTok{(xvar)}
+\NormalTok{alphahat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -0.008003707
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SEbetahat }\OtherTok{\textless{}{-}}\NormalTok{ sigmahat}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(xvar)}
+\NormalTok{SEbetahat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.6124708
+\end{verbatim}
+
+Finally, let's manually test with hypothesis of beta = 0:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t\_stat }\OtherTok{\textless{}{-}}\NormalTok{ betahat }\SpecialCharTok{/}\NormalTok{ SEbetahat}
+\NormalTok{p\_value\_beta }\OtherTok{\textless{}{-}} \DecValTok{2} \SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{pt}\NormalTok{(}\FunctionTok{abs}\NormalTok{(t\_stat), }\AttributeTok{df =} \FunctionTok{length}\NormalTok{(x) }\SpecialCharTok{{-}} \DecValTok{2}\NormalTok{))}
+\NormalTok{p\_value\_beta}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.02286395
+\end{verbatim}
+
+\section{Question 2}\label{question-2}
+
+First we set up the data, with the true parameters given by the
+assignment, and setting up our matrix with code given by the assignment:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{truebeta }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{200000}\NormalTok{, }\DecValTok{45}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{300}\NormalTok{, }\DecValTok{10000}\NormalTok{, }\DecValTok{150000}\NormalTok{)}
+\NormalTok{truesigma }\OtherTok{\textless{}{-}} \DecValTok{12000}
+\NormalTok{A1\_variates }\OtherTok{\textless{}{-}} \FunctionTok{read.table}\NormalTok{(}\StringTok{\textquotesingle{}\textasciitilde{}/Documents/GitHub/Big{-}Ahh{-}R{-}Repo/Stat331/Stat331 A1/data/raw/A1\_variates (1).txt\textquotesingle{}}\NormalTok{,}\AttributeTok{header =} \ConstantTok{TRUE}\NormalTok{, }
+                          \AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(A1\_variates)}
+\NormalTok{n}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 24
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,n),A1\_variates))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{a)}\label{a-1}
+
+Since we've set the random seed, we can generate a replicable random
+dataframe for the assignment:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{21066922}\NormalTok{)}
+\NormalTok{simulatedresponse }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{as.vector}\NormalTok{(X }\SpecialCharTok{\%*\%}\NormalTok{ truebeta) }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n,}\DecValTok{0}\NormalTok{,truesigma))}
+\NormalTok{simulatedresponse }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 166281.206 153730.937  43338.698 193046.302 137185.704  10542.334
+##  [7]  14183.044  81275.444 115711.040  98465.901  39357.221  11103.992
+## [13]   7704.852  82777.187 110100.768  88648.310  47059.937 161115.200
+## [19] 160731.747 142684.940 123764.878 126090.364 173399.992  -5527.173
+\end{verbatim}
+
+\subsubsection{b)}\label{b-1}
+
+Labelling our variables a little more, we run the multilinear model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ simulatedresponse}
+\NormalTok{size }\OtherTok{\textless{}{-}}\NormalTok{ A1\_variates}\SpecialCharTok{$}\NormalTok{size}
+\NormalTok{age }\OtherTok{\textless{}{-}}\NormalTok{ A1\_variates}\SpecialCharTok{$}\NormalTok{age}
+\NormalTok{employees }\OtherTok{\textless{}{-}}\NormalTok{ A1\_variates}\SpecialCharTok{$}\NormalTok{employees}
+\NormalTok{col }\OtherTok{\textless{}{-}}\NormalTok{ A1\_variates}\SpecialCharTok{$}\NormalTok{col}
+\NormalTok{mlr }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{size}\SpecialCharTok{+}\NormalTok{age}\SpecialCharTok{+}\NormalTok{employees}\SpecialCharTok{+}\NormalTok{col)}
+\FunctionTok{summary}\NormalTok{(mlr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ size + age + employees + col)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -22388  -5899   1651   7308  17474 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -161990.95   58235.05  -2.782 0.011889 *  
+## size             66.05      17.06   3.872 0.001027 ** 
+## age            -447.16     392.25  -1.140 0.268453    
+## employees      7100.09    1657.67   4.283 0.000401 ***
+## col          113817.43   54698.58   2.081 0.051221 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 11500 on 19 degrees of freedom
+## Multiple R-squared:  0.9709, Adjusted R-squared:  0.9648 
+## F-statistic: 158.5 on 4 and 19 DF,  p-value: 2.6e-14
+\end{verbatim}
+
+\subsubsection{c)}\label{c-1}
+
+We now manually calculate it by definition and confirm that the model
+provides the same betashat:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{betashat }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X)}\SpecialCharTok{\%*\%}\NormalTok{X)}\SpecialCharTok{\%*\%}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ y}
+\NormalTok{betashat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                    [,1]
+## rep(1, n) -161990.95474
+## size           66.05003
+## age          -447.16037
+## employees    7100.08632
+## col        113817.42867
+\end{verbatim}
+
+\subsubsection{d)}\label{d-1}
+
+Let's find the 95\% confidence interval for the size variate:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{confint}\NormalTok{(mlr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                    2.5 %      97.5 %
+## (Intercept) -283878.3251 -40103.5843
+## size             30.3454    101.7547
+## age           -1268.1392    373.8184
+## employees      3630.5454  10569.6272
+## col            -668.0088 228302.8661
+\end{verbatim}
+
+Looking at the size row, was see the 95\% confidence interval for size
+is {[}30.3454, 101.7547{]}. Since the true value of beta1 = 45 falls
+directly within our calculated 95\% confidence interval of {[}30.3454,
+101.7547{]}, the interval is entirely consistent with the value used to
+generate the data.
+
+\end{document}

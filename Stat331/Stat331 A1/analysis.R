@@ -60,15 +60,17 @@ alpha <- summary(slr)$coefficients[1,4]
 alpha
 #h)
   #i) alpha hat:
-alphahat <- ybar - xbar* summary(slr)$coefficients[2,1] 
+alphahat <- ybar - xbar* sum((x - xbar)*(y - ybar))/(xvar)
   #ii) beta hat:
-betahat <- summary(slr)$coefficients[2,1]
+betahat <-  sum((x - xbar)*(y - ybar))/(xvar)
   #iii) Standard Error of beta hat:
-SEbetahat <- summary(slr)$coefficients[2,2]
+SEbetahat <- sigmahat/sqrt(xvar)
   #iv) sigmahat:
 sigmahat <- sqrt(sum((residuals(slr))^2)/(length(x)-2))
   #v) he p-value associated with H_0 : beta = 0
-summary(slr)$coefficients[2,4]
+t_stat <- betahat / SEbetahat
+p_value_beta <- 2 * (1 - pt(abs(t_stat), df = length(x) - 2))
+print(paste("Verified P-value for Beta:", p_value_beta))
 
 #2. 
 truebeta <- c(-200000, 45, -300, 10000, 150000)
@@ -87,7 +89,11 @@ simulatedresponse
 
 #b)
 y <- simulatedresponse
-mlr <- lm(y~A1_variates$size+A1_variates$age+A1_variates$employees+A1_variates$col)
+size <- A1_variates$size
+age <- A1_variates$age
+employees <- A1_variates$employees
+col <- A1_variates$col
+mlr <- lm(y~size+age+employees+col)
 summary(mlr)
 
 #c)

@@ -1,40 +1,174 @@
 ---
 title: "Stat331 Assignment 1"
-author: "Milagro Chen"
+author: "Milagro Chen (21066922)"
 date: "`r Sys.Date()`"
 output:
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: no
   html_document:
-    toc: true
+    toc: yes
+  word_document: default
 ---
 
-## Setup
+# Set up
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-source("analysis.R")
-```
-
-## Load data
+Here are the libraries used:
 
 ```{r}
-# Update the file path to your assignment dataset
-df <- load_assignment_data("data/raw/students.csv")
-head(df)
+library(data.table)
+library(tidyverse)
 ```
 
-## Transform data
+
+# Question 1
+
+First we clean the original csv file to be in accordance with the assignment. We want BB and TSXC to be percent change, and GVTB10 to be in monthly rates instead of yearly. We also drop the old columns and OTEX from the dataframe. On top of that, we want the very first row to be removed, as it has an undefined percentage change from the month previous(it doesn't have a previous month).
 
 ```{r}
-df <- add_exam_average(df, "exam1", "exam2")
-summary(df$average)
+CAPM_S26 <- read.csv('~/Documents/GitHub/Big-Ahh-R-Repo/Stat331/Stat331 A1/data/raw/CAPM_S26.csv')
+capm_s26 <- CAPM_S26
+capm_s26$bb_Percent <- (CAPM_S26$BB - lag(CAPM_S26$BB, 1) ) / lag(CAPM_S26$BB, 1)
+capm_s26$tsxc_Percent <- (CAPM_S26$TSXC - lag(CAPM_S26$TSXC, 1) ) / lag(CAPM_S26$TSXC, 1)
+capm_s26$gvtb10_monthly <- (((CAPM_S26$GVTB10 / 100) + 1) ** (1/12)) -1
+
+capm_s26 <- capm_s26[-1,]
 ```
 
-## Visualization
+Moving forward, we will define x and y to be the excess return of the TSXC and BB respectively:
 
 ```{r}
-hist(df$average, main = "Average Score Distribution", xlab = "Average")
+y <- capm_s26$bb_Percent - capm_s26$gvtb10_monthly
+x <- capm_s26$tsxc_Percent - capm_s26$gvtb10_monthly
 ```
 
-## Conclusions
+### a)
 
-Write your interpretation here.
+Here is the plot. Fitting a line of best fit, we see the slope is positive, hinting that BB's beta is slightly positive. We will proceed to verify that claim, and see just how strong such a claim is. A linear model is appropriate, as the data roughly follows a linear pattern. There aren't too many outliers, but some months BB's excess returns are rather higher than TSXC.
+
+```{r}
+plot(x, y, 
+     main="BB Excess Returns vs. Market Excess Returns",
+     xlab="TSXC Excess Return (x)", 
+     ylab="BB Excess Return (y)", 
+     pch=19, col="darkblue")
+abline(lm(y ~ x), col="red", lwd=2)
+```
+
+### b)
+Using R, we find the correlation coefficient to be 0.2959326: 
+
+```{r}
+cor(x,y)
+```
+
+### c)
+Manually checking, we arrive at the same number, 0.2959326:
+```{r}
+xbar <- mean(x)
+ybar <- mean(y)
+
+xvar <- sum((x - xbar)**2)
+yvar <- sum((y - ybar)**2)
+
+rho <- (sum((x - xbar)*(y - ybar)))/(sqrt(yvar*xvar))
+rho
+```
+
+### d)
+Performing the linear regression we get this summary:
+```{r}
+slr <- lm(y ~ x)
+summary(slr)
+```
+
+### e)
+searching on https://www.investing.com/equities/research-in-motion-ltd?cid=1055239, we find that our model outputted 1.43 while the website has 1.47, and on a deeper dive it has beta = 1.55. This is explained by different methodology, such as slightly different time frame of data(daily,yearly,etc.), slight discrepancies in data(different sources), and sheer amount of data(we used 59 months, whereas the website could be using the full 60 months)
+
+### f)
+Using R, we have this as our 95% confidence interval:
+```{r}
+confint(slr)
+```
+Specifically looking at the x variate, we see the interval is [0.20612328, 2.6590266], showing that the true beta is, with 95% probability, in between 0.20612328 and 2.6590266. Because the 95% confidence interval contains 1, we do not have sufficient statistical evidence to conclude that BB's stock volatility is significantly different from the market volatility
+
+Manually, we get this same result:
+```{r}
+t57_0975 <- qt(0.975, 57)
+low <- summary(slr)$coefficients[2,1] - summary(slr)$coefficients[2,2] * t57_0975
+high <- summary(slr)$coefficients[2,1] + summary(slr)$coefficients[2,2] * t57_0975
+c(low,high)
+```
+### g)
+Viewing our summary again:
+```{r}
+summary(slr)
+```
+We see that the intercept, which is interpreted as the expected excess return of BB given that TSXC returns 0% after accounting for the risk free rate in a given month, AKA BB's alpha, is -0.008004, with a p-value of 0.7246, signalling that we failed to reject the null hypothesis of BB's alpha being 0. We can't conclude that BB has any alpha, statistically speaking.
+
+### h)
+First let's show betahat and sigmahat:
+```{r}
+betahat <-  sum((x - xbar)*(y - ybar))/(xvar)
+betahat
+sigmahat <- sqrt(sum((residuals(slr))^2)/(length(x)-2))
+sigmahat
+```
+Using these the values above, let's show alphahat and SEbetahat:
+```{r}
+alphahat <- ybar - xbar* sum((x - xbar)*(y - ybar))/(xvar)
+alphahat
+SEbetahat <- sigmahat/sqrt(xvar)
+SEbetahat
+```
+Finally, let's manually test with hypothesis of beta = 0:
+```{r}
+t_stat <- betahat / SEbetahat
+p_value_beta <- 2 * (1 - pt(abs(t_stat), df = length(x) - 2))
+p_value_beta
+```
+# Question 2
+First we set up the data, with the true parameters given by the assignment, and setting up our matrix with code given by the assignment:
+
+```{r}
+truebeta <- c(-200000, 45, -300, 10000, 150000)
+truesigma <- 12000
+A1_variates <- read.table('~/Documents/GitHub/Big-Ahh-R-Repo/Stat331/Stat331 A1/data/raw/A1_variates (1).txt',header = TRUE, 
+                          stringsAsFactors = FALSE)
+n <- nrow(A1_variates)
+n
+X <- as.matrix(cbind(rep(1,n),A1_variates))
+```
+### a)
+Since we've set the random seed, we can generate a replicable random dataframe for the assignment:
+```{r}
+set.seed(21066922)
+simulatedresponse <- (as.vector(X %*% truebeta) + rnorm(n,0,truesigma))
+simulatedresponse 
+```
+
+### b)
+Labelling our variables a little more, we run the multilinear model:
+```{r}
+y <- simulatedresponse
+size <- A1_variates$size
+age <- A1_variates$age
+employees <- A1_variates$employees
+col <- A1_variates$col
+mlr <- lm(y~size+age+employees+col)
+summary(mlr)
+```
+### c) 
+We now manually calculate it by definition and confirm that the model provides the same betashat:
+```{r}
+betashat <- solve(t(X)%*%X)%*%t(X) %*% y
+betashat
+```
+### d)
+Let's find the 95% confidence interval for the size variate:
+```{r}
+confint(mlr)
+```
+Looking at the size row, was see the 95% confidence interval for size is [30.3454, 101.7547]. Since the true value of beta1 = 45 falls directly within our calculated 95% confidence interval of [30.3454, 101.7547], the interval is entirely consistent with the value used to generate the data.
+

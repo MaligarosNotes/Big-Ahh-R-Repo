@@ -1,0 +1,148 @@
+---
+title: "STAT 341: Worksheet 2 - Spring 2026 "
+author: "Instructor: Ryan Browne"
+output:
+  html_document:
+    toc: yes
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: no
+  word_document: default
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{r, include = FALSE}
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=70),tidy=TRUE)
+```
+
+
+# NOTES
+
+
+
+
+---
+
+
+## Question - Plotting a basketball Court 
+
+Here we will write a function called `drawCourt` that plots half of approximate basketball court and some helper functions. You must use functions from `base` or `graphics` package. In particular you should use `rect`, `lines`, and `segments`.
+
+- Some features are 
+- The baseline line is $50$ ft. 
+- The sideline line is $47$ ft.
+- The backboard is $4$ ft. from the baseline and is $6$ ft. wide.
+- The basket has a diameter of $1.5$ ft and is $5.25$ ft up from the middle of the baseline
+- The 3 point line is an arc of circle with radius $23.75$ centered at the middle of the basket and two lines that are 3 ft from the sideline. 
+
+$\;$
+
+- The aspect ratio of the plot should be to 1:1. 
+- The solution should look like the following image but with no numbers. 
+
+![Dimensions for court](dimBasketball.png){width=50%}
+ 
+
+a) Write a function called `drawBox(xy, wh)` which draws a rectangle and has inputs 
+    - `xy` a vector of length 2 with the coordinates (x,y) for the rectangle and 
+    - `wh` a vector of length 2 with the width and height of the rectangle
+b)  Write a function called `drawArc(xy, r, angles)` which draws an arc and inputs
+    - `xy` a vector of length 2 with the coordinates (x,y) for the centre of the circle and 
+    - `r` is the radius of the circle
+    - `angles` is a vector of length 2 with the starting and ending angle. 
+c)  Write a function called `drawCourt` function which plots a blank court.
+d) Draw a blank court and add the shots made by LeBron James in the file `LeBronShots.csv`. For the plot:
+    - Add a title,
+    - Use `score_value` to colour the shots by 2 pointers, 3 pointers and missed shots, 
+    - Add shading and random uniform noise to the shot coordinates because the positions are discrete. 
+    
+
+
+## Question - 2021-2022 NBA Player Analysis 
+
+The file `NBA_Player_2021-22_subset.csv` contains player information on NBA players that played more than `120` minutes in the NBA in 2021 and 2022. 
+
+
+Variate        | Description
+-------------- |-----------------------------------------------------
+`name`        | Player Name 
+`position`        | The main position for that player
+`min`        | The number of minutes played 
+`reb`        | The number of rebounds
+`dreb`         | The number of of defensive rebounds
+`oreb`          | The number of of offensive rebounds
+`ast`       | The number of assists
+`stl`      | The number of times the player causes the other team to turnover the ball.
+`blk`      | The number of times the player blocked or deflects a shot from offensive player to prevent a score.
+`pts`     | The number of points obtained 
+`plus_minus`     | the difference between their team's total scoring versus their opponent's when the player is in the game. It is used to measure a player's impact on the game. 
+`score2pt`     | The number of successful 2 pointer shots 
+`score3pt`     | The number of successful 2 pointer shots 
+`shot3pt`     | The number of 2 pointer shots 
+`shot2p`     | The number of 2 pointer shots 
+`numShot`     | The total number of shots 
+
+(a) Load the data and output the number of rows and columns. 
+
+(b) Using R, add a new variable to the data called `pos_plus_minus` which is 1 when `plus_minus` is positive and zero otherwise. Then construct a table with the number players with by `position` and `pos_plus_minus`. 
+
+(c) Using R, create a new variable `shot2pt_pro = shot2p/numShot` and `percent_shot2p = score2pt/shot2p`. Then calculate and report the average `percent_shot2p` and `shot2pt_pro` for each level position.
+
+(d) Using R, add a new variable to the data called `ptsAst_min = (ast+pts)/min`. Then provide the player information on players with the top five values of `ptsAst_min`. Note: Nikola Jokic won the NBA Most Valuable Player (MVP) Award. Then plot all the players by `ptsAst_min` and `percent_shot2p` and highlight the MVP. 
+
+(e) Using R, add a new variable to the data called `defplay_min = (dreb + blk + stl)/min`. Then provide the player information on players with the top five values of `defplay_min`. Rudy Gobert won the NBA Defensive Player (DP) of the Year Award. Then plot all the players by `defplay_min` and `plus_minus` and highlight the DP. 
+
+
+(f) Power transformations; for the following figures and plot make sure to appropriately title and label your plots. Here is the `powerfun`  for convenience 
+```{r}
+powerfun <- function(x, alpha) {
+  if(sum(x <= 0) > 1) stop("x must be positive")
+  if (alpha == 0)
+    log(x)
+  else if (alpha > 0) {
+    x^alpha
+  } else -x^alpha
+}
+```
+
+i) Using the `min` and `pts` construct a $1\times 3$ figure containing the individual histograms and a scatterplot. 
+
+ii) What power (the values of $\alpha$) make the distribution of `min` approximately symmetric? Plot a histogram of the transformed variable. Plot a histogram of the transformed variable, and justify your choice of $\alpha$. 
+
+iii) What power (the values of $\alpha$) make the distribution of `pts` approximately symmetric? Plot a histogram of the transformed variable. Plot a histogram of the transformed variable, and justify your choice of $\alpha$.  
+
+iv) What pair of powers (the values of $\alpha$) make the scatter plot of `min` and `pts` approximately linear with constant variance? Plot a scatter plot of the transformed variables.  Plot a histogram of the transformed variable, and justify your choices for the two $\alpha$.
+    
+
+
+
+
+
+## Question - Drug Seizure Weights
+
+$\;$
+
+Drugs seizure weights (in grams) were presented in Travova E. Under Pressure? Performance Evaluation of Police Officers as an Incentive to Cheat: Evidence from Drug Crimes in Russia. IDEAS Working Paper Series from RePEc. Published online 2019. Unable to obtain this data, the file `DrugWeight.csv` contains data generated with similar features.
+
+- Note, ensure that all the plots are properly labelled.
+
+a) Construct a histogram using the default setting and a boxplot. The plots should be side-by-side in the same figure and they all should be properly labelled. What are the main features of the histogram and boxplot?
+
+b) Construct two histograms, one using 20 unequal bins and another that uses breaks suggested by the paper (bins of width 0.1 grams). From the histograms what are the main features?
+
+c) Construct a quantile plot of the drug weights. What feature does the quantile plot exhibit? 
+
+d) Which plot is a good representation of the data and why? What is the implicit assumption made when viewing a boxplots or how is the boxplot misleading. 
+
+e) Find a power transformation and construct a histogram that emphasizes or accentuates the modes. (A power that makes it easier to see the modes). 
+
+f) From the paper ``thresholds determine the scales of seizures (less than significant, significant and large drug amounts) that define the severity of crime and punishment'' and the supplemental Tables B1 and B2 gave the amount, severity and sentence. The scale of seizures are $(0,0.5)$, $[0.5,2.5)$ and $>2.5$. Draw the histogram of weight with bin size $0.1$ and the power transformed weight. Add the lines to both plots at the thresholds $0.5$ and $2.5$ grams. Describe the local behaviour or feature around each threshold.
+
+
+  
+    
