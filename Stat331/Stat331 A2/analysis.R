@@ -54,11 +54,12 @@ solve(t(X)%*%X)
 
 
 #2.
+#a)
 ceocomp
 ceo_pos <- subset(ceocomp,ceocomp$PROF>0)
 set.seed(21066922)
 my.ceo_pos = ceo_pos[sample(nrow(ceo_pos),60),]   
-
+my.ceo_pos 
 ?as.factor
 comp <- my.ceo_pos$COMP
 x1 <- my.ceo_pos$AGE
@@ -70,5 +71,26 @@ x6 <- my.ceo_pos$SALES
 x7 <- my.ceo_pos$VAL
 x8 <- my.ceo_pos$PCNTOWN
 x9 <- my.ceo_pos$PROF
-model <- lm(comp ~ x1+x2+x3+x4+x5+x6+x7+x8+x9)
-model
+fullmodel <- lm(comp ~ x1+x2+x3+x4+x5+x6+x7+x8+x9)
+summary(fullmodel)
+#b)
+pf()
+#c)
+# with beta hat x34 being -289, we say WITHOUT statistical significance that lawyers tend to make less than banking background
+# sales also makes less, but we're even LESS certain of this estimate.
+
+
+#d)
+redmodel <- lm(comp ~ x1+x2+x4+x5+x6+x7+x8+x9)
+summary(redmodel)
+#i) they are all correlated, as a long EXPER certainly implies longer TENURE and AGE
+#ii) 
+pairs(cbind(x1,x2,x4,x5,x6,x7,x8,x9))
+#iii)
+agemodel <- lm(x1~x2+x4+x5+x6+x7+x8+x9)
+summary(agemodel)
+VIF <- 1/(1-0.2956)
+#its ok
+#e)
+new_x <- data.frame(x1=48,x2=1,x4=14,x5=3,x6=3100,x7=2.1,x8=.011,x9=172)
+predict(redmodel,new_x,interval='prediction',level=.95)
