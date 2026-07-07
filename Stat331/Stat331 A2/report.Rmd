@@ -1,40 +1,189 @@
 ---
-title: "Assignment Report"
-author: "Your Name"
+title: "Stat331 Assignment 2"
+author: "Milagro Chen (21066922)"
 date: "`r Sys.Date()`"
 output:
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: no
   html_document:
-    toc: true
+    toc: yes
+  word_document: default
 ---
 
-## Setup
+# Set up
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-source("analysis.R")
-```
-
-## Load data
+Here are the libraries used:
 
 ```{r}
-# Update the file path to your assignment dataset
-df <- load_assignment_data("data/raw/students.csv")
-head(df)
+library(data.table)
+library(tidyverse)
 ```
 
-## Transform data
-
+Here is also my A1 Question 2 code copy-pasted in, so that I can complete A2 Question 1 without hassle:
 ```{r}
-df <- add_exam_average(df, "exam1", "exam2")
-summary(df$average)
+#2.FROM A1 
+truebeta <- c(-200000, 45, -300, 10000, 150000)
+truesigma <- 12000
+A1_variates <- read_table('~/Documents/GitHub/Big-Ahh-R-Repo/Stat331/Stat331 A1/data/raw/A1_variates (1).txt')
+n <- nrow(A1_variates)
+X <- as.matrix(cbind(rep(1,n),A1_variates))
+set.seed(21066922)
+
+#a)
+simulatedresponse <- (as.vector(X %*% truebeta) + rnorm(n,0,truesigma))
+#this is the simulated data with the random seed set to my student number
+simulatedresponse
+
+#b)
+y <- simulatedresponse
+size <- A1_variates$size
+age <- A1_variates$age
+employees <- A1_variates$employees
+col <- A1_variates$col
+mlr <- lm(y~size+age+employees+col)
+summary(mlr)
+
+#c)
+betashat <- solve(t(X)%*%X)%*%t(X) %*% y
+#d)
+confint(mlr)
 ```
 
-## Visualization
+# FROM HERE ON IS THE START OF A2
 
+# Question 1
+
+Using the provided code, and my student number, I generated the betas:
 ```{r}
-hist(df$average, main = "Average Score Distribution", xlab = "Average")
+betahat_mat = array(0,c(5,1000)) #creates an array to store sets of estimates
+set.seed(21066922)
+for (i in 1:1000){
+  y<-X%*%truebeta+rnorm(24,0,12000) #X and Beta vector as defined in A1.
+  A1sim.lm<-lm(y~size+age+employees+col)
+  betahat_mat[,i]<-coef(A1sim.lm) #yields estimates for each iteration
+}
 ```
+### a)
+Then we will specifically focus on the beta_2:
+```{r}
+betahat_mat[2,]
+```
+and here is the histogram, where we can see it is roughly normal, as expected:
+```{r}
+hist(betahat_mat[2,])
+```
+We also expect that the mean be very close to 45, which is our true beta_2:
+```{r}
+mean(betahat_mat[2,])
+```
+We also also expect the standard deviation and the standard error to be very close:
+```{r}
+sqrt(var(betahat_mat[2,]))
+```
+Since we know that the beta estimate follows $N(truebeta, truesigma^2 (X^tX)^{-1})$,
+we can get the standard error as such, confirming they are indeed very similar:
+```{r}
+sqrt((solve(t(X)%*%X) * truesigma**2)[2,2])
+```
+### b)
+Focusing on the covariance now, we want to find the 3,4 entry of the covariance matrix:
+```{r}
+(solve(t(X)%*%X) * truesigma**2)[3,4]
+```
+Comparing it to our empirical(generated) result, we notice that it is double what is expected,
+which just goes to show the randomness of the generated sample:
+```{r}
+cov(betahat_mat[3,],betahat_mat[4,])
+```
+# Question 2
+So let's first load in the data, filter by positive revenue, and sample randomly with my student number as seed:
+```{r}
+ceocomp <- read.csv('~/Documents/GitHub/Big-Ahh-R-Repo/Stat331/Stat331 A2/data/raw/ceocomp.csv')
+ceo_pos <- subset(ceocomp,ceocomp$PROF>0)
+set.seed(21066922)
+my.ceo_pos = ceo_pos[sample(nrow(ceo_pos),60),]   
+my.ceo_pos 
+```
+### a)
+Let's run the model:
+```{r}
+comp <- my.ceo_pos$COMP
+x1 <- my.ceo_pos$AGE
+x2 <- my.ceo_pos$EDUCATN
+x3 <- as.factor(my.ceo_pos$BACKGRD)
+x4 <- my.ceo_pos$TENURE
+x5 <- my.ceo_pos$EXPER
+x6 <- my.ceo_pos$SALES
+x7 <- my.ceo_pos$VAL
+x8 <- my.ceo_pos$PCNTOWN
+x9 <- my.ceo_pos$PROF
+fullmodel <- lm(comp ~ x1+x2+x3+x4+x5+x6+x7+x8+x9)
+summary(fullmodel)
+```
+### b)
+Let's run the hypothesis test for $\hat \beta = \vec 0$
+```{r}
+r2_full <- summary(fullmodel)$r.squared
+msreg <- r2_full/12
+msres <- (1-r2_full)/47
+1 - pf(msreg/msres,12,47)
+```
+So with a significance level of 0.05, we can conclude with statistical significance that there is at least one explanatory variate that is non-zero, hence contributes to explaining the compensation.
+### c)
+```{r}
+summary(fullmodel)
+```
+i) with beta hat x34 being -289, we say WITHOUT statistical significance(because the p value is 0.23>0.05) that lawyers tend to make $289 000 less than banking background, after factoring the rest of the explanatory variates.
+ii) ceos with sales/marketing background also makes less, at -$56 000, than ones with banking background, accounting for all other explanatory factors. But we're even LESS certain of this estimate, with the p-value at 0.81.
 
-## Conclusions
+Let's do an additional sum of squares test for the model without industry background as a factor, compared to the full model:
+```{r}
+redmodel <- lm(comp ~ x1+x2+x4+x5+x6+x7+x8+x9)
+r2_red  <- summary(redmodel)$r.squared
 
-Write your interpretation here.
+f_num <- (r2_full - r2_red)/4
+f_den <- (1 - r2_full)/47
+f_stat <- f_num/f_den
+1 - pf(f_stat,4,47)
+```
+Comparing it to the anova test, we find that the test comes back very similar:
+```{r}
+anova(redmodel,fullmodel)
+```
+Which means that after accounting for the other explantory variates, we can't conclude the CEO's background has much effect on the comp.
+# d)
+now let's focus on the reduced model:
+```{r}
+summary(redmodel)
+```
+Where we notice that the relation between age, tenure, and experience may be problematic because they are all correlated, as a long EXPER certainly implies longer TENURE and AGE.
+
+Let's see the pairs chart:
+```{r}
+pairs(cbind(x1,x4,x5))
+```
+Where we see a slight linear relation between the 3 variables in question. So I'll say that multicollinearity may be an issue.
+Let's test with the VIF for age:
+```{r}
+agemodel <- lm(x1~x2+x4+x5+x6+x7+x8+x9)
+r2 <- summary(agemodel)$r.squared
+VIF <- 1/(1-r2)
+VIF
+```
+Which honestly is not that bad, so I retract my statement from before, as the VIF is fairly below 10. In case the assignment was looking for ONLY the 3 variables, here is that VIF:
+```{r}
+ageredmodel <- lm(x1~x4+x5)
+r2 <- summary(ageredmodel)$r.squared
+VIF <- 1/(1-r2)
+VIF
+```
+Which it seems like it doesn't make much of a difference.
+### e)
+Let's predict a new CEO's comp:
+```{r}
+new_x <- data.frame(x1=48,x2=1,x4=14,x5=3,x6=3100,x7=2.1,x8=1.1,x9=172)
+predict(redmodel,new_x,interval='prediction',level=.95)
+```
+We can say that the comp of 1.5 million is fairly reasonable, if not a little high. 1500 is still within the 95% prediction interval, so I'd say it is reasonable consistent with the other CEOs' comps.

@@ -1,0 +1,930 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Stat331 Assignment 2},
+  pdfauthor={Milagro Chen (21066922)},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Stat331 Assignment 2}
+\author{Milagro Chen (21066922)}
+\date{2026-07-06}
+
+\begin{document}
+\maketitle
+
+\section{Set up}\label{set-up}
+
+Here are the libraries used:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(data.table)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'data.table'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     %notin%
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+## v dplyr     1.2.1     v readr     2.2.0
+## v forcats   1.0.1     v stringr   1.6.0
+## v ggplot2   4.0.3     v tibble    3.3.1
+## v lubridate 1.9.5     v tidyr     1.3.2
+## v purrr     1.2.2
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::between()     masks data.table::between()
+## x dplyr::filter()      masks stats::filter()
+## x dplyr::first()       masks data.table::first()
+## x lubridate::hour()    masks data.table::hour()
+## x lubridate::isoweek() masks data.table::isoweek()
+## x lubridate::isoyear() masks data.table::isoyear()
+## x dplyr::lag()         masks stats::lag()
+## x dplyr::last()        masks data.table::last()
+## x lubridate::mday()    masks data.table::mday()
+## x lubridate::minute()  masks data.table::minute()
+## x lubridate::month()   masks data.table::month()
+## x lubridate::quarter() masks data.table::quarter()
+## x lubridate::second()  masks data.table::second()
+## x purrr::transpose()   masks data.table::transpose()
+## x lubridate::wday()    masks data.table::wday()
+## x lubridate::week()    masks data.table::week()
+## x lubridate::yday()    masks data.table::yday()
+## x lubridate::year()    masks data.table::year()
+## i Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+\end{verbatim}
+
+Here is also my A1 Question 2 code copy-pasted in, so that I can
+complete A2 Question 1 without hassle:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#2.FROM A1 }
+\NormalTok{truebeta }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{200000}\NormalTok{, }\DecValTok{45}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{300}\NormalTok{, }\DecValTok{10000}\NormalTok{, }\DecValTok{150000}\NormalTok{)}
+\NormalTok{truesigma }\OtherTok{\textless{}{-}} \DecValTok{12000}
+\NormalTok{A1\_variates }\OtherTok{\textless{}{-}} \FunctionTok{read\_table}\NormalTok{(}\StringTok{\textquotesingle{}\textasciitilde{}/Documents/GitHub/Big{-}Ahh{-}R{-}Repo/Stat331/Stat331 A1/data/raw/A1\_variates (1).txt\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   size = col_double(),
+##   age = col_double(),
+##   employees = col_double(),
+##   col = col_double()
+## )
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{n }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(A1\_variates)}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,n),A1\_variates))}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{21066922}\NormalTok{)}
+
+\CommentTok{\#a)}
+\NormalTok{simulatedresponse }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{as.vector}\NormalTok{(X }\SpecialCharTok{\%*\%}\NormalTok{ truebeta) }\SpecialCharTok{+} \FunctionTok{rnorm}\NormalTok{(n,}\DecValTok{0}\NormalTok{,truesigma))}
+\CommentTok{\#this is the simulated data with the random seed set to my student number}
+\NormalTok{simulatedresponse}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 166281.206 153730.937  43338.698 193046.302 137185.704  10542.334
+##  [7]  14183.044  81275.444 115711.040  98465.901  39357.221  11103.992
+## [13]   7704.852  82777.187 110100.768  88648.310  47059.937 161115.200
+## [19] 160731.747 142684.940 123764.878 126090.364 173399.992  -5527.173
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#b)}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ simulatedresponse}
+\NormalTok{size }\OtherTok{\textless{}{-}}\NormalTok{ A1\_variates}\SpecialCharTok{$}\NormalTok{size}
+\NormalTok{age }\OtherTok{\textless{}{-}}\NormalTok{ A1\_variates}\SpecialCharTok{$}\NormalTok{age}
+\NormalTok{employees }\OtherTok{\textless{}{-}}\NormalTok{ A1\_variates}\SpecialCharTok{$}\NormalTok{employees}
+\NormalTok{col }\OtherTok{\textless{}{-}}\NormalTok{ A1\_variates}\SpecialCharTok{$}\NormalTok{col}
+\NormalTok{mlr }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{size}\SpecialCharTok{+}\NormalTok{age}\SpecialCharTok{+}\NormalTok{employees}\SpecialCharTok{+}\NormalTok{col)}
+\FunctionTok{summary}\NormalTok{(mlr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ size + age + employees + col)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -22388  -5899   1651   7308  17474 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -161990.95   58235.05  -2.782 0.011889 *  
+## size             66.05      17.06   3.872 0.001027 ** 
+## age            -447.16     392.25  -1.140 0.268453    
+## employees      7100.09    1657.67   4.283 0.000401 ***
+## col          113817.43   54698.58   2.081 0.051221 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 11500 on 19 degrees of freedom
+## Multiple R-squared:  0.9709, Adjusted R-squared:  0.9648 
+## F-statistic: 158.5 on 4 and 19 DF,  p-value: 2.6e-14
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#c)}
+\NormalTok{betashat }\OtherTok{\textless{}{-}} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X)}\SpecialCharTok{\%*\%}\NormalTok{X)}\SpecialCharTok{\%*\%}\FunctionTok{t}\NormalTok{(X) }\SpecialCharTok{\%*\%}\NormalTok{ y}
+\CommentTok{\#d)}
+\FunctionTok{confint}\NormalTok{(mlr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                    2.5 %      97.5 %
+## (Intercept) -283878.3251 -40103.5843
+## size             30.3454    101.7547
+## age           -1268.1392    373.8184
+## employees      3630.5454  10569.6272
+## col            -668.0088 228302.8661
+\end{verbatim}
+
+\section{FROM HERE ON IS THE START OF
+A2}\label{from-here-on-is-the-start-of-a2}
+
+\section{Question 1}\label{question-1}
+
+Using the provided code, and my student number, I generated the betas:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{betahat\_mat }\OtherTok{=} \FunctionTok{array}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{1000}\NormalTok{)) }\CommentTok{\#creates an array to store sets of estimates}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{21066922}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{1000}\NormalTok{)\{}
+\NormalTok{  y}\OtherTok{\textless{}{-}}\NormalTok{X}\SpecialCharTok{\%*\%}\NormalTok{truebeta}\SpecialCharTok{+}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{24}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{12000}\NormalTok{) }\CommentTok{\#X and Beta vector as defined in A1.}
+\NormalTok{  A1sim.lm}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(y}\SpecialCharTok{\textasciitilde{}}\NormalTok{size}\SpecialCharTok{+}\NormalTok{age}\SpecialCharTok{+}\NormalTok{employees}\SpecialCharTok{+}\NormalTok{col)}
+\NormalTok{  betahat\_mat[,i]}\OtherTok{\textless{}{-}}\FunctionTok{coef}\NormalTok{(A1sim.lm) }\CommentTok{\#yields estimates for each iteration}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{a)}\label{a}
+
+Then we will specifically focus on the beta\_2:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{betahat\_mat[}\DecValTok{2}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    [1]  66.05002666  43.87575653  53.01144804  47.98280338  32.37587784
+##    [6]  67.50546009  31.93719334  51.60804551  52.00534788  51.25325086
+##   [11]  41.07436771  77.85328624  68.99281833  64.50584605  46.98548077
+##   [16]   1.89186411  49.76301711  27.65918151  69.06511279  74.89605545
+##   [21]  57.18067235   4.96857609  76.61670648  12.57508156  51.21112114
+##   [26]  49.58377011  53.74398113  72.25653703  64.29875796  17.27724366
+##   [31]  60.57388200  36.22716352  65.75930465  21.75794870  67.08999078
+##   [36]  63.03989818  30.34586795  78.64890158  45.83499172  39.24445780
+##   [41]  20.10589045  62.57085647  17.32880691  42.47797268  43.57534683
+##   [46]  25.73766720  20.42872371  44.60273587  45.86064908  43.68680076
+##   [51]  21.05761136  52.83377464  17.48645763  27.96584284  30.76073710
+##   [56]  48.96715565  50.66304408  51.42739239  40.30615210  21.07661199
+##   [61]  48.62424881  57.81855140  40.31752268  50.36861568  31.28243797
+##   [66]  40.17018696  67.65682371  33.81556358  60.45862474  41.88867444
+##   [71]  60.36755746  63.78715438   8.76971443  67.86159655  47.34652871
+##   [76]  61.50764422  71.26067585  52.20619345  56.29331384  80.44137796
+##   [81]  82.90692654 -11.81071311   9.64201490  62.19466985  17.23150646
+##   [86]  42.41133281  45.50188253  47.43569632  53.58106775  79.34996789
+##   [91]  43.57481518  55.29354634  32.02552815  69.93540881  33.45036034
+##   [96]  39.18829818  54.01645704  62.94400583  54.89422546  49.87968386
+##  [101]  42.50389674  37.46843179  36.68911391  38.89780087  41.49852386
+##  [106]  28.57632921  81.56414562  56.21055545  76.14714679  19.14294637
+##  [111]  56.42945941  29.45026582  65.96582992  68.38813814  55.23774650
+##  [116]  28.70866345  48.67279126  54.61572798  14.72281161  13.96459655
+##  [121]  41.17218071  45.32011407  61.34798420  31.73759768  47.33506661
+##  [126]  55.04185132  56.99061249  21.17313407  35.16774482  41.54268378
+##  [131]  70.57061401  39.28327712  34.85183717  41.99877195  58.31163626
+##  [136]  34.48157121  73.13136281  65.14549975  42.97390691  44.62832871
+##  [141]  31.49855008  51.50321694  36.87758818  70.22924187  33.16676867
+##  [146]  34.13119545  67.25877165  18.69807303  40.74037853  31.13743232
+##  [151]  43.95332102  80.15870739  48.62775275  47.85792477  44.19382390
+##  [156]  90.11922894  37.01952826  36.10992222  73.35913699  23.04266279
+##  [161]  47.59194860  29.60900135  41.63545573  51.39709750  54.21659885
+##  [166]  23.68104078  36.78007851   9.42897183  57.60124873  36.02331405
+##  [171]  68.27324155  59.94623595  67.66564338  71.07045647  41.76413273
+##  [176]  18.10925479  51.66284030  23.22870833  66.35404610  27.89588618
+##  [181]   0.02244654  56.13507557  59.32509369  49.15844083  34.47738991
+##  [186]  70.77713858  60.87499598  45.40166940  56.61639815  69.62940355
+##  [191]  43.39423313  42.22138826  30.41062344  40.95867176  34.29407378
+##  [196]  67.97886217  31.10773191  49.24739898  37.27537607  68.10759464
+##  [201]  55.15410448  63.10062544  32.29868082  41.74946778  47.43396011
+##  [206]  19.70990912  61.27382978  61.90409030  53.84990391  46.10773959
+##  [211]  48.55712469  38.13305864  56.62369259  38.63963362  31.81839733
+##  [216]  45.45138470  74.73290412  54.05456602  45.14022077  48.38973087
+##  [221]  36.66643298  21.15733337  55.12573015  38.68445757  35.70540581
+##  [226]  51.87692603  29.89100728  65.72946252  13.71567680  26.03017329
+##  [231]  38.50992445  64.53482773   9.02655558   9.73809244  50.16642576
+##  [236]  62.73271551  76.73053230  72.95957613  30.78923116  72.85367844
+##  [241]  10.78099853  32.61145940  45.42009849  48.48555436  56.00081048
+##  [246]  45.90467963  66.21795585  53.45384203  25.62151895  42.34443018
+##  [251]  12.83012285  28.10840729  96.66725066  41.36470817  56.85206060
+##  [256]  71.28829670  42.35773024  62.11790832  55.55955463  68.51742012
+##  [261]  16.45881228  85.52128306  57.26889316  20.19008359  37.62104702
+##  [266]  65.40005378  38.28277851  48.14135794  65.91406645  60.35034073
+##  [271]  62.44469169  50.20705201  65.73631191   5.28213203  28.10792228
+##  [276]  44.51265128  45.46833325  31.15502558  78.07515510  44.71416098
+##  [281]  61.32781803  42.25563712  60.77871662  55.82124424  29.43281698
+##  [286]  59.93937112  55.61674621  57.76930863  25.45914105  41.44500228
+##  [291]  24.48909966  21.03955246  62.20011271  78.47422814  94.30739221
+##  [296]  37.04963955  16.48939812  56.59708361  59.64647162  45.76835962
+##  [301]  12.46895636  34.46644153  60.12718728  56.53920133  37.28462841
+##  [306]  67.00257869  42.38554544  38.16058920  62.61278268  48.70985422
+##  [311]  29.26701993  45.65926732  24.13657523  19.59379265  68.98526885
+##  [316]  34.23828156  50.15645998  36.67236078  27.29212216  46.02895545
+##  [321]  62.37660527  60.63912369  59.63476171  53.75366168  58.92549370
+##  [326]  73.95522230  45.95820675  30.87056271  41.64469990  62.06978528
+##  [331]  32.97965041  39.33180076  47.77426151  45.32920221  13.78919433
+##  [336]  52.39967380  27.93337494  -0.80018005  63.46755128  51.80356951
+##  [341]  32.18910076  48.26895591  10.79588951  83.14692259  15.51640053
+##  [346]  32.08699796  52.40106445   6.57578349  41.66478443  60.38975371
+##  [351]  50.49285614  47.31931991  10.84500360  54.69730957  41.24491268
+##  [356]  36.59289492  50.33558785  61.16576298  53.03582337  31.03262455
+##  [361]  43.81204201  70.50876824  29.09237705  44.75612082  48.96354496
+##  [366]  62.38652535  20.65106858  41.93567979  64.07137343  14.64421224
+##  [371]  53.14571367  52.77567289  36.08726853  31.18345517  48.10564634
+##  [376]  46.88556349  69.77720733  42.39051552  26.11134892  45.60992265
+##  [381]  39.81141866  36.93657939  38.96878767  33.22539465  25.25014290
+##  [386]  33.55681756  58.64319082  -1.94193738  35.43194561  53.27258443
+##  [391]  55.96865689  64.08956530  29.08951008  46.35887115  39.50814481
+##  [396]  66.76667828  72.75540956  -0.34787953  48.20304003  17.64555141
+##  [401]  52.40902318  45.32920091  49.41275571  30.99238614  50.12092642
+##  [406]  41.20488685  49.86891927  40.94258508  63.67700862  48.65020337
+##  [411]  40.73850466   2.59069120  41.82222372  47.62328342  50.06931019
+##  [416]  31.02221237  36.26525674  37.16364840  44.51867756   8.26351328
+##  [421]  68.09373959  51.30197077  21.18518664  28.09210251  32.85519025
+##  [426]  35.30242889  13.58376893  49.92759725  27.24948337  25.92573561
+##  [431]  65.14951859  50.98748691  45.27189483  67.75975318  49.12341849
+##  [436]  32.93910521  46.68729247  44.52572800  40.11555341  19.68709553
+##  [441]  32.39513039  54.39516697  38.45382590  65.32290604  46.61071279
+##  [446]  28.51903434  52.21496076   4.29206939  55.79754527  30.33572985
+##  [451]  61.34178498  43.68514035  26.14440425  59.44565564  70.78596555
+##  [456]  33.11825296  53.10081327  16.16144655  58.68943623  56.89369179
+##  [461]  72.43682762  45.71121744  60.60666892  20.23609281  14.12553091
+##  [466]  32.12966334  35.31764321  48.36205966  45.70533226  22.37485499
+##  [471]  46.31609414  26.41663155  47.20818698  58.61024847  51.33819730
+##  [476]  21.22421309  24.63601514  45.04999601  21.93717202  54.26448975
+##  [481]  42.36188361  43.91382577  60.17054607  52.90724347  76.96165566
+##  [486]  40.12528365  64.88868924  56.39918616  64.33186620  49.13270342
+##  [491]  15.33040334  48.63619082  -4.57109694  90.90600479  48.27069492
+##  [496]  15.38234734  46.07293588  80.63481897  42.43592390  63.22742584
+##  [501]  48.36126805  38.10143596  73.90920780  18.45041955  57.01437167
+##  [506]  63.24060326  51.87978562  64.58465240  80.01427661  55.55608280
+##  [511]  37.45652775  28.41814270  34.61259311  50.45572871  47.89919068
+##  [516]  49.53837056  61.15028813  44.28611849  62.19817522  56.88095015
+##  [521]  53.61165730  83.82820656  40.63585101  19.50749141   8.71194298
+##  [526]  88.89387804  53.32866051  17.24329198  20.01837824  52.26496053
+##  [531]  17.22533565  56.34619174  75.78394803  48.68952649  66.76150196
+##  [536]  36.81793483  35.35483403  17.58656725  29.54347290  72.85849036
+##  [541]  47.73981131  26.02839075  55.70236348  30.02477371  52.45456343
+##  [546]  73.70766235  55.14325136  20.60013872  37.15552183  36.84186123
+##  [551]  17.51637226  14.72034397  30.11128292  52.04196131  28.92104149
+##  [556]  36.56114657  47.74146687  51.96504555  51.32086295  43.79361740
+##  [561]  30.90192678  22.73708934  48.94841432  30.35801213  51.37781823
+##  [566]  48.11604352  31.84999727  62.11386711  21.84317782  54.53050252
+##  [571]  52.85764413  47.80404207  64.56433356  31.79103705  11.12077985
+##  [576]  36.35919231  53.81653997   4.75433911  47.69890168  74.65668805
+##  [581]  11.69765169   8.43908221  59.57298789  65.96982822  64.93449753
+##  [586]  41.08815425  37.21397629  42.86064252   2.52446767  29.70711755
+##  [591]  32.45719721  57.49197326  63.45255516  42.53355354  71.19041723
+##  [596]  51.66725983  57.13278899  54.80259946  65.93767043  54.90646576
+##  [601]  58.78282250  63.70074387  47.31574410  67.00746866  79.42523663
+##  [606]  40.43349372  41.98505013  66.93325466  45.21562792  36.01411022
+##  [611]  64.09736168  12.66437923  17.69622454  50.14480901  37.60224457
+##  [616]  56.77067640  43.67897438  56.28239367  29.15569634  51.00484898
+##  [621]  40.18626706  49.25496025  58.87761051  38.41289923  36.49253359
+##  [626]  64.77165621  66.41648574  54.15283515  44.55837645  37.89272157
+##  [631]  33.04628337  21.79889150  55.24783704  80.74880692  26.42216764
+##  [636]  41.98401104  25.64597030  46.99795980  50.59216855  65.26565984
+##  [641]  49.28867776  71.58631342  46.98265214  52.59882935  30.39186240
+##  [646]  64.73689712  46.01874338  26.89911044  89.75590244  75.53283512
+##  [651]  28.12701490  28.59685662  17.83758500  56.34307791  39.92687689
+##  [656]  34.52490826  57.75468953  29.53628331  51.65499360  59.44112482
+##  [661]  10.22041579  24.04410049  87.73752102  53.90385410  47.98446530
+##  [666]  60.25368569  26.84092681  47.88740113  29.54254693  38.69998851
+##  [671]  61.76164522  49.13972770  55.25997349  62.66038752  40.58058996
+##  [676]  46.03930783  64.01639300  55.92851501  61.69775613  41.00026551
+##  [681]  41.03453326 -20.01430018  29.29461735  46.03279011  53.56688153
+##  [686]  61.09205595  29.93310169  65.50132624  26.90921270  25.98964099
+##  [691]  40.74978127  71.58883536  70.24503268  30.99750446  58.21333555
+##  [696]  36.84013839  50.12395396  81.07896718  33.81174000  66.96246606
+##  [701]  56.76372029  39.75498617  67.82983117  42.60757946  64.72530790
+##  [706]  57.97127671  49.27462605  30.94190125  57.88042419  12.91830571
+##  [711]  13.35693493  41.22600120  56.10665444  36.86275427  11.46446260
+##  [716]  37.15440618  34.21062660  72.50310620  55.90815479  45.72296074
+##  [721]  47.97652848  42.17227803  34.32460024  21.20481506  36.31046771
+##  [726]  55.55208646  71.20873705  37.63272674  31.46041911  19.59670266
+##  [731]  63.26608859  80.19209866  41.91674082  30.95363509  50.00519609
+##  [736]   7.47979009  28.05640677  13.31318536  48.79004761  53.31773381
+##  [741]  34.30772564  25.30396234  20.68984629  58.67121283  66.38938276
+##  [746]  35.07480511  24.45638917  73.58779270  73.15935598  43.92092711
+##  [751]  52.21071867  38.98016133  53.13868161  42.69290028  35.35704175
+##  [756]  25.24654978  54.55092587  52.19972234  43.68409144  56.18358736
+##  [761]  47.85667764  65.04486603  26.60726327  40.03424248  61.04671056
+##  [766]  26.76242390  49.44918017  49.65359150  28.43606584  30.93731590
+##  [771]  36.16011152  44.22621419  42.73503358  23.32708961  63.44565967
+##  [776]  66.70096021  44.46257746  62.88388667  92.43021029  63.20378673
+##  [781]  38.93569786   5.10744501  31.61325893  63.98052696  55.57493832
+##  [786]  46.88933363  26.70958445  33.75376373  44.13275343  57.00340291
+##  [791]  69.83111440  63.76978316  58.68552994  62.56241629  41.39601410
+##  [796]  60.91366200  78.45125250  10.21321086  38.48894165  34.28514425
+##  [801]  21.00324063  44.09165975  36.73171701  64.31342224  56.90536566
+##  [806]  68.55430069  81.18945078  43.60962083  46.40393544  35.61477901
+##  [811]  17.99784277   2.33509360  40.22859167  48.37834788  49.87030612
+##  [816]  17.48703553  45.31625333  48.61422465  33.62644739  43.76469772
+##  [821]  72.46027810  16.12069788  58.56704368  41.03769340  62.69611535
+##  [826]  61.90705930  56.82762460  42.90831340  42.71992443  37.63647398
+##  [831]  28.36461009  20.61652530  39.47189596  44.01157945  55.16805183
+##  [836]  75.64070998  38.32853623  28.40331116  45.66252499  61.50289468
+##  [841]  26.43369046  41.42326106  54.47147465  25.32758698  25.17725932
+##  [846]  44.27644457  63.53555437  44.30929156  49.14676378  67.24061977
+##  [851]  60.26591369  38.20965693   7.85374473  54.83647875  40.74110440
+##  [856]  49.20167735  54.69988882  44.15805019  -3.16891483  41.83917151
+##  [861]  46.96278252  63.35747336  52.07160551  58.70621084  41.09552959
+##  [866]  70.27069875  56.92587972  58.81276029  -7.07910245  56.09196605
+##  [871]  78.67373172  63.38816771  50.91204017  60.33851781  62.84316088
+##  [876]  49.02506450  42.47715283  35.55971300  22.57355328  35.99450810
+##  [881]  30.95765456  26.73825752  72.95984207  66.86079497  25.24275314
+##  [886]  15.05056718  69.03393488  55.57888408  28.22892672  32.25103710
+##  [891]  50.28533182  75.38179471  30.17083182  51.09983254  42.37760490
+##  [896]  52.03796194  39.40973551  47.06205148  55.05515291  29.76115638
+##  [901]  30.67889664  81.83957699  76.98777751  25.94958034  49.13710618
+##  [906]  42.62476870  79.57913498  34.57604451  72.06900037  39.67976909
+##  [911] 103.66459201  38.06336436  34.40993755  62.35701024  33.28320158
+##  [916]  28.48982387  58.78977829  37.72324971  73.14152165  47.08768253
+##  [921]  12.41495168  50.80845876  41.35698824  19.02608903  51.76013532
+##  [926]  74.93280147  43.58892529  41.03754515  55.26692550  68.29835496
+##  [931]  31.86174731  42.85936547  46.88183656  53.70377155  59.73406652
+##  [936]  53.65197405  40.15287690  34.16017622  56.46935995  73.98852599
+##  [941]  79.01129976  46.96571238  33.92870980  29.77669604  58.56958676
+##  [946]  63.93608215  35.22621085  32.05672496  13.01625103  59.11802093
+##  [951]  23.05435156  29.24772501   6.78809878  55.98536762  54.54903682
+##  [956]  43.75796699  51.16131619  49.76324505  35.07008285  24.77961116
+##  [961]  57.65930709  80.57855004  56.43145843  47.72260702  59.88635718
+##  [966]  19.68625020  54.05887379  61.11859249  39.54513110  41.17400518
+##  [971]  21.64784533  58.04587055  35.97880403  45.14451669  47.06758120
+##  [976]  52.86041099  53.26266483  45.44228317   5.45196701  64.91185846
+##  [981]  38.35560102  64.30362718  39.21264764  24.07019481  29.29460108
+##  [986]  42.25899947  40.45780169  59.03464089  23.45521129  63.16055603
+##  [991]  41.88971183  58.75635008  22.38228675  23.47540919  42.74780989
+##  [996]  31.36159134  51.84882712  18.60231350  46.81218069  28.05291386
+\end{verbatim}
+
+and here is the histogram, where we can see it is roughly normal, as
+expected:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(betahat\_mat[}\DecValTok{2}\NormalTok{,])}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/report_files/figure-latex/unnamed-chunk-5-1.pdf}}
+We also expect that the mean be very close to 45, which is our true
+beta\_2:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(betahat\_mat[}\DecValTok{2}\NormalTok{,])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 45.35998
+\end{verbatim}
+
+We also also expect the standard deviation and the standard error to be
+very close:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{var}\NormalTok{(betahat\_mat[}\DecValTok{2}\NormalTok{,]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 18.16771
+\end{verbatim}
+
+Since we know that the beta estimate follows
+\(N(truebeta, truesigma^2 (X^tX)^{-1})\), we can get the standard error
+as such, confirming they are indeed very similar:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sqrt}\NormalTok{((}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X)}\SpecialCharTok{\%*\%}\NormalTok{X) }\SpecialCharTok{*}\NormalTok{ truesigma}\SpecialCharTok{**}\DecValTok{2}\NormalTok{)[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 17.80204
+\end{verbatim}
+
+\subsubsection{b)}\label{b}
+
+Focusing on the covariance now, we want to find the 3,4 entry of the
+covariance matrix:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(X)}\SpecialCharTok{\%*\%}\NormalTok{X) }\SpecialCharTok{*}\NormalTok{ truesigma}\SpecialCharTok{**}\DecValTok{2}\NormalTok{)[}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 36459.56
+\end{verbatim}
+
+Comparing it to our empirical(generated) result, we notice that it is
+double what is expected, which just goes to show the randomness of the
+generated sample:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cov}\NormalTok{(betahat\_mat[}\DecValTok{3}\NormalTok{,],betahat\_mat[}\DecValTok{4}\NormalTok{,])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 68171.26
+\end{verbatim}
+
+\section{Question 2}\label{question-2}
+
+So let's first load in the data, filter by positive revenue, and sample
+randomly with my student number as seed:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ceocomp }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{\textquotesingle{}\textasciitilde{}/Documents/GitHub/Big{-}Ahh{-}R{-}Repo/Stat331/Stat331 A2/data/raw/ceocomp.csv\textquotesingle{}}\NormalTok{)}
+\NormalTok{ceo\_pos }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(ceocomp,ceocomp}\SpecialCharTok{$}\NormalTok{PROF}\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{21066922}\NormalTok{)}
+\NormalTok{my.ceo\_pos }\OtherTok{=}\NormalTok{ ceo\_pos[}\FunctionTok{sample}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(ceo\_pos),}\DecValTok{60}\NormalTok{),]   }
+\NormalTok{my.ceo\_pos }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    COMP AGE EDUCATN BACKGRD TENURE EXPER SALES    VAL PCNTOWN PROF
+## 50  616  51       2       3     16   9.0  2754    0.3    0.01  237
+## 31 1331  56       2       2     33   4.0 18807    4.8    0.03  942
+## 67  925  64       1       4     39  30.0  3670   46.5    2.52  118
+## 85 1032  63       2       5     35   8.0  2354    2.2    0.12   46
+## 6  2342  71       1       1     46  34.0   835    9.6    0.83   99
+## 41 1948  55       1       3     23  23.0  1227    7.6    0.55  145
+## 25  768  60       2       1     30   8.0  2097    0.7    0.02  322
+## 94  854  62       1       5     30   3.0   669    2.6    0.17   81
+## 27  307  47       2       1     14   2.0   649    0.2    0.02   65
+## 57  466  48       2       3     17   1.0  1539    0.2    0.01  189
+## 95  600  60       0       5     42   1.0  1214   85.6   17.66   43
+## 68  596  60       2       4      9   2.0  1148    0.3    0.02  136
+## 64  558  62       2       4     34  12.0  2359    0.2    0.01  265
+## 49 1031  55       1       3     35   1.0 13340    3.6    0.02 1154
+## 74 2094  63       1       5     41   8.0 10818    5.9    0.04 1166
+## 12 1030  55       2       1     11  11.0  1236    3.3    0.43   22
+## 87 1019  56       2       5     30   9.0  3259   49.3    0.68  311
+## 89  600  52       2       5     12   2.0 21351    4.2    0.26  101
+## 59  597  57       2       4     27  13.0  2686    1.4    0.03  377
+## 32 1034  51       1       2     23   3.0   578    7.0    0.83   82
+## 47 1652  60       2       3     34  14.0 14949   11.5    0.06  856
+## 16  447  50       2       1      5   1.0  1084    0.3    0.03   54
+## 1   570  60       1       1      3   3.0   804    0.2    0.21   49
+## 39  517  59       1       2     37  21.0  3180  181.0    6.70  136
+## 88 1752  63       1       5     14  14.0  5137  534.2    3.99  249
+## 71  809  59       1       5     38   0.5 19196    0.4    0.01  505
+## 11  514  57       2       1      3   3.0   661    4.1    0.17   79
+## 35 1571  53       1       2     31   9.0 16115    4.2    0.09  301
+## 63 2244  64       2       4     41   5.0  4451    4.0    0.04   30
+## 79  453  64       2       5     40  26.0   872   54.5    3.14   91
+## 62  670  64       2       4     15  15.0  1535    1.9    0.12  145
+## 72 2027  62       2       5     25   5.0  8379    3.4    0.04  806
+## 76 1126  64       1       5     28  14.0  2545    3.4    0.21   63
+## 14  576  48       2       1      8   6.0  1199    0.3    0.02  134
+## 70  804  55       0       5     15  10.0   657   10.6    1.75   25
+## 30  541  51       2       2     17  12.0   862    1.0    0.10  113
+## 9  1341  55       2       1     30   7.0  4377    2.1    0.04  390
+## 13  329  37       2       1     11   1.0   344   12.9    4.15   29
+## 46  635  59       2       3     33   2.0  3963    0.8    0.12   99
+## 96 1088  45       2       5     11  11.0   415    2.6    0.17   48
+## 17 1144  60       2       1     37  10.0  4594    6.9    0.37  150
+## 44 2847  62       1       3     37  10.0  3817    3.6    0.05  584
+## 80  643  65       1       5     29  23.0  1681    8.9    0.89   44
+## 48  467  62       2       3     13   8.0  2549    0.3    0.01  306
+## 61  893  60       2       4     36  15.0  4444    2.0    0.04  417
+## 52 1377  56       1       3     32   3.0  2434    5.3    0.18  273
+## 84  493  59       1       5     34   4.0  1556    0.2    0.01  169
+## 38 1622  57       1       2     29   5.0  9886    9.7    0.19  347
+## 53  621  60       2       3     36   3.0  1552    0.9    0.03  210
+## 20  688  54       2       1     28  28.0  3277 1689.0   34.04  317
+## 36 1554  61       1       2     41  17.0  1435   30.6    2.23   82
+## 37  427  54       1       2     31  15.0  2366   71.4   10.09   55
+## 75 1833  63       2       5     36   7.0 17037    6.3    0.04  709
+## 91 1630  60       1       5     36  20.0  8331  132.5    8.21   82
+## 23  476  50       1       1     20   0.5  3148    1.3    0.05  260
+## 45  897  56       2       3      2   5.0  2689    1.0    0.07   81
+## 33 1461  63       1       2     23   8.0  5673    3.6    0.05  201
+## 69  462  61       2       4     25  11.0  1314   16.8    1.03   27
+## 18  425  74       1       1      3   3.0   475    0.1    0.07    6
+## 19 1671  63       2       1     17  12.0  1967    5.5    0.20  143
+\end{verbatim}
+
+\subsubsection{a)}\label{a-1}
+
+Let's run the model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{comp }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{COMP}
+\NormalTok{x1 }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{AGE}
+\NormalTok{x2 }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{EDUCATN}
+\NormalTok{x3 }\OtherTok{\textless{}{-}} \FunctionTok{as.factor}\NormalTok{(my.ceo\_pos}\SpecialCharTok{$}\NormalTok{BACKGRD)}
+\NormalTok{x4 }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{TENURE}
+\NormalTok{x5 }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{EXPER}
+\NormalTok{x6 }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{SALES}
+\NormalTok{x7 }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{VAL}
+\NormalTok{x8 }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{PCNTOWN}
+\NormalTok{x9 }\OtherTok{\textless{}{-}}\NormalTok{ my.ceo\_pos}\SpecialCharTok{$}\NormalTok{PROF}
+\NormalTok{fullmodel }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(comp }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{+}\NormalTok{x2}\SpecialCharTok{+}\NormalTok{x3}\SpecialCharTok{+}\NormalTok{x4}\SpecialCharTok{+}\NormalTok{x5}\SpecialCharTok{+}\NormalTok{x6}\SpecialCharTok{+}\NormalTok{x7}\SpecialCharTok{+}\NormalTok{x8}\SpecialCharTok{+}\NormalTok{x9)}
+\FunctionTok{summary}\NormalTok{(fullmodel)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = comp ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -770.55 -243.91  -58.34  244.04 1377.97 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)   47.44104  813.18192   0.058   0.9537  
+## x1            12.97890   13.09608   0.991   0.3267  
+## x2          -179.31590  142.78847  -1.256   0.2154  
+## x32          -56.74491  245.13235  -0.231   0.8179  
+## x33           -2.10798  213.67373  -0.010   0.9922  
+## x34         -289.68693  238.66829  -1.214   0.2309  
+## x35         -106.44351  205.82659  -0.517   0.6075  
+## x4            11.83513    7.80118   1.517   0.1359  
+## x5            16.16317   10.72494   1.507   0.1385  
+## x6             0.01224    0.01796   0.682   0.4989  
+## x7             0.82042    0.66549   1.233   0.2238  
+## x8           -58.36783   29.68720  -1.966   0.0552 .
+## x9             0.49202    0.36009   1.366   0.1783  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 500.2 on 47 degrees of freedom
+## Multiple R-squared:  0.4259, Adjusted R-squared:  0.2793 
+## F-statistic: 2.905 on 12 and 47 DF,  p-value: 0.004416
+\end{verbatim}
+
+\subsubsection{b)}\label{b-1}
+
+Let's run the hypothesis test for \(\hat \beta = \vec 0\)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{r2\_full }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(fullmodel)}\SpecialCharTok{$}\NormalTok{r.squared}
+\NormalTok{msreg }\OtherTok{\textless{}{-}}\NormalTok{ r2\_full}\SpecialCharTok{/}\DecValTok{12}
+\NormalTok{msres }\OtherTok{\textless{}{-}}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{r2\_full)}\SpecialCharTok{/}\DecValTok{47}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{pf}\NormalTok{(msreg}\SpecialCharTok{/}\NormalTok{msres,}\DecValTok{12}\NormalTok{,}\DecValTok{47}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.004415791
+\end{verbatim}
+
+So with a significance level of 0.05, we can conclude with statistical
+significance that there is at least one explanatory variate that is
+non-zero, hence contributes to explaining the compensation. \#\#\# c)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(fullmodel)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = comp ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -770.55 -243.91  -58.34  244.04 1377.97 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)   47.44104  813.18192   0.058   0.9537  
+## x1            12.97890   13.09608   0.991   0.3267  
+## x2          -179.31590  142.78847  -1.256   0.2154  
+## x32          -56.74491  245.13235  -0.231   0.8179  
+## x33           -2.10798  213.67373  -0.010   0.9922  
+## x34         -289.68693  238.66829  -1.214   0.2309  
+## x35         -106.44351  205.82659  -0.517   0.6075  
+## x4            11.83513    7.80118   1.517   0.1359  
+## x5            16.16317   10.72494   1.507   0.1385  
+## x6             0.01224    0.01796   0.682   0.4989  
+## x7             0.82042    0.66549   1.233   0.2238  
+## x8           -58.36783   29.68720  -1.966   0.0552 .
+## x9             0.49202    0.36009   1.366   0.1783  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 500.2 on 47 degrees of freedom
+## Multiple R-squared:  0.4259, Adjusted R-squared:  0.2793 
+## F-statistic: 2.905 on 12 and 47 DF,  p-value: 0.004416
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi})}
+\tightlist
+\item
+  with beta hat x34 being -289, we say WITHOUT statistical
+  significance(because the p value is 0.23\textgreater0.05) that lawyers
+  tend to make \$289 000 less than banking background, after factoring
+  the rest of the explanatory variates.
+\item
+  ceos with sales/marketing background also makes less, at -\$56 000,
+  than ones with banking background, accounting for all other
+  explanatory factors. But we're even LESS certain of this estimate,
+  with the p-value at 0.81.
+\end{enumerate}
+
+Let's do an additional sum of squares test for the model without
+industry background as a factor, compared to the full model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{redmodel }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(comp }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1}\SpecialCharTok{+}\NormalTok{x2}\SpecialCharTok{+}\NormalTok{x4}\SpecialCharTok{+}\NormalTok{x5}\SpecialCharTok{+}\NormalTok{x6}\SpecialCharTok{+}\NormalTok{x7}\SpecialCharTok{+}\NormalTok{x8}\SpecialCharTok{+}\NormalTok{x9)}
+\NormalTok{r2\_red  }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(redmodel)}\SpecialCharTok{$}\NormalTok{r.squared}
+
+\NormalTok{f\_num }\OtherTok{\textless{}{-}}\NormalTok{ (r2\_full }\SpecialCharTok{{-}}\NormalTok{ r2\_red)}\SpecialCharTok{/}\DecValTok{4}
+\NormalTok{f\_den }\OtherTok{\textless{}{-}}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ r2\_full)}\SpecialCharTok{/}\DecValTok{47}
+\NormalTok{f\_stat }\OtherTok{\textless{}{-}}\NormalTok{ f\_num}\SpecialCharTok{/}\NormalTok{f\_den}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{pf}\NormalTok{(f\_stat,}\DecValTok{4}\NormalTok{,}\DecValTok{47}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.7764592
+\end{verbatim}
+
+Comparing it to the anova test, we find that the test comes back very
+similar:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{anova}\NormalTok{(redmodel,fullmodel)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: comp ~ x1 + x2 + x4 + x5 + x6 + x7 + x8 + x9
+## Model 2: comp ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+##   Res.Df      RSS Df Sum of Sq      F Pr(>F)
+## 1     51 12201235                           
+## 2     47 11757365  4    443870 0.4436 0.7765
+\end{verbatim}
+
+Which means that after accounting for the other explantory variates, we
+can't conclude the CEO's background has much effect on the comp. \# d)
+now let's focus on the reduced model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(redmodel)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = comp ~ x1 + x2 + x4 + x5 + x6 + x7 + x8 + x9)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -717.60 -285.72  -39.28  286.79 1311.98 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)  277.33972  730.43905   0.380   0.7058  
+## x1             9.17031   12.13919   0.755   0.4535  
+## x2          -212.08401  125.88116  -1.685   0.0981 .
+## x4            10.44381    7.40399   1.411   0.1644  
+## x5            15.04509   10.37970   1.449   0.1533  
+## x6             0.01059    0.01619   0.654   0.5158  
+## x7             0.88585    0.64852   1.366   0.1779  
+## x8           -59.34763   28.94672  -2.050   0.0455 *
+## x9             0.55425    0.33688   1.645   0.1061  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 489.1 on 51 degrees of freedom
+## Multiple R-squared:  0.4042, Adjusted R-squared:  0.3108 
+## F-statistic: 4.325 on 8 and 51 DF,  p-value: 0.0004988
+\end{verbatim}
+
+Where we notice that the relation between age, tenure, and experience
+may be problematic because they are all correlated, as a long EXPER
+certainly implies longer TENURE and AGE.
+
+Let's see the pairs chart:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pairs}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(x1,x4,x5))}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{report_files/report_files/figure-latex/unnamed-chunk-18-1.pdf}}
+Where we see a slight linear relation between the 3 variables in
+question. So I'll say that multicollinearity may be an issue. Let's test
+with the VIF for age:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{agemodel }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(x1}\SpecialCharTok{\textasciitilde{}}\NormalTok{x2}\SpecialCharTok{+}\NormalTok{x4}\SpecialCharTok{+}\NormalTok{x5}\SpecialCharTok{+}\NormalTok{x6}\SpecialCharTok{+}\NormalTok{x7}\SpecialCharTok{+}\NormalTok{x8}\SpecialCharTok{+}\NormalTok{x9)}
+\NormalTok{r2 }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(agemodel)}\SpecialCharTok{$}\NormalTok{r.squared}
+\NormalTok{VIF }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{r2)}
+\NormalTok{VIF}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.419673
+\end{verbatim}
+
+Which honestly is not that bad, so I retract my statement from before,
+as the VIF is fairly below 10. In case the assignment was looking for
+ONLY the 3 variables, here is that VIF:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ageredmodel }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(x1}\SpecialCharTok{\textasciitilde{}}\NormalTok{x4}\SpecialCharTok{+}\NormalTok{x5)}
+\NormalTok{r2 }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(ageredmodel)}\SpecialCharTok{$}\NormalTok{r.squared}
+\NormalTok{VIF }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{r2)}
+\NormalTok{VIF}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.259891
+\end{verbatim}
+
+Which it seems like it doesn't make much of a difference. \#\#\# e)
+Let's predict a new CEO's comp:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new\_x }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x1=}\DecValTok{48}\NormalTok{,}\AttributeTok{x2=}\DecValTok{1}\NormalTok{,}\AttributeTok{x4=}\DecValTok{14}\NormalTok{,}\AttributeTok{x5=}\DecValTok{3}\NormalTok{,}\AttributeTok{x6=}\DecValTok{3100}\NormalTok{,}\AttributeTok{x7=}\FloatTok{2.1}\NormalTok{,}\AttributeTok{x8=}\FloatTok{1.1}\NormalTok{,}\AttributeTok{x9=}\DecValTok{172}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(redmodel,new\_x,}\AttributeTok{interval=}\StringTok{\textquotesingle{}prediction\textquotesingle{}}\NormalTok{,}\AttributeTok{level=}\NormalTok{.}\DecValTok{95}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        fit       lwr      upr
+## 1 761.5257 -268.8854 1791.937
+\end{verbatim}
+
+We can say that the comp of 1.5 million is fairly reasonable, if not a
+little high. 1500 is still within the 95\% prediction interval, so I'd
+say it is reasonable consistent with the other CEOs' comps.
+
+\end{document}
