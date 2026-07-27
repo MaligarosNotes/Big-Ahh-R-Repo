@@ -111,3 +111,30 @@ abline(h = highlev)
 
 #7.
 hatvalues(lnmodel)[hatvalues(lnmodel)>0.4]
+#29 is high lev
+plot(log(x6))
+plot(log(x7))
+plot(log(x8))
+plot(log(x9),)
+#8.
+plot(lnmodel, which = 4)
+#to no surprise, 29 is highest cooks, but according to the general rules, nothing is above 1, hence nothing is too strongly influencial
+
+#9.
+library(leaps)
+#a)
+summary(lnmodel)
+droppedx9 <- lm(lncomp ~ log(x6)+log(x7)+log(x8))
+summary(droppedx9)
+droppedx9x6 <- lm(lncomp ~ log(x7)+log(x8))
+summary(droppedx9x6)
+
+#b)
+?leaps
+lnX <- as.matrix(cbind(log(x6),log(x7),log(x8),log(x9)))
+cp_out    <- leaps(x = lnX, y = lncomp, method = "Cp",    nbest = 1)
+adjr2_out <- leaps(x = lnX, y = lncomp, method = "adjr2", nbest = 1)
+
+cp_out$Cp    
+cp_out$which  
+adjr2_out$adjr2 
