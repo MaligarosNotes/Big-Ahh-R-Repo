@@ -1,5 +1,5 @@
 ---
-title: "Stat331 Assignment 2"
+title: "Stat331 Assignment 3"
 author: "Milagro Chen (21066922)"
 date: "`r Sys.Date()`"
 output:
@@ -19,96 +19,18 @@ Here are the libraries used:
 ```{r}
 library(data.table)
 library(tidyverse)
+library(leaps)
 ```
 
-Here is also my A1 Question 2 code copy-pasted in, so that I can complete A2 Question 1 without hassle:
+Here is also my A2 Question 2 code copy-pasted in, so that I can complete A3 without hassle:
 ```{r}
-#2.FROM A1 
-truebeta <- c(-200000, 45, -300, 10000, 150000)
-truesigma <- 12000
-A1_variates <- read_table('~/Documents/GitHub/Big-Ahh-R-Repo/Stat331/Stat331 A1/data/raw/A1_variates (1).txt')
-n <- nrow(A1_variates)
-X <- as.matrix(cbind(rep(1,n),A1_variates))
-set.seed(21066922)
-
+#2.FROM A2 
 #a)
-simulatedresponse <- (as.vector(X %*% truebeta) + rnorm(n,0,truesigma))
-#this is the simulated data with the random seed set to my student number
-simulatedresponse
-
-#b)
-y <- simulatedresponse
-size <- A1_variates$size
-age <- A1_variates$age
-employees <- A1_variates$employees
-col <- A1_variates$col
-mlr <- lm(y~size+age+employees+col)
-summary(mlr)
-
-#c)
-betashat <- solve(t(X)%*%X)%*%t(X) %*% y
-#d)
-confint(mlr)
-```
-
-# FROM HERE ON IS THE START OF A2
-
-# Question 1
-
-Using the provided code, and my student number, I generated the betas:
-```{r}
-betahat_mat = array(0,c(5,1000)) #creates an array to store sets of estimates
-set.seed(21066922)
-for (i in 1:1000){
-  y<-X%*%truebeta+rnorm(24,0,12000) #X and Beta vector as defined in A1.
-  A1sim.lm<-lm(y~size+age+employees+col)
-  betahat_mat[,i]<-coef(A1sim.lm) #yields estimates for each iteration
-}
-```
-### a)
-Then we will specifically focus on the beta_2:
-```{r}
-betahat_mat[2,]
-```
-and here is the histogram, where we can see it is roughly normal, as expected:
-```{r}
-hist(betahat_mat[2,])
-```
-We also expect that the mean be very close to 45, which is our true beta_2:
-```{r}
-mean(betahat_mat[2,])
-```
-We also also expect the standard deviation and the standard error to be very close:
-```{r}
-sqrt(var(betahat_mat[2,]))
-```
-Since we know that the beta estimate follows $N(truebeta, truesigma^2 (X^tX)^{-1})$,
-we can get the standard error as such, confirming they are indeed very similar:
-```{r}
-sqrt((solve(t(X)%*%X) * truesigma**2)[2,2])
-```
-### b)
-Focusing on the covariance now, we want to find the 3,4 entry of the covariance matrix:
-```{r}
-(solve(t(X)%*%X) * truesigma**2)[3,4]
-```
-Comparing it to our empirical(generated) result, we notice that it is double what is expected,
-which just goes to show the randomness of the generated sample:
-```{r}
-cov(betahat_mat[3,],betahat_mat[4,])
-```
-# Question 2
-So let's first load in the data, filter by positive revenue, and sample randomly with my student number as seed:
-```{r}
 ceocomp <- read.csv('~/Documents/GitHub/Big-Ahh-R-Repo/Stat331/Stat331 A2/data/raw/ceocomp.csv')
 ceo_pos <- subset(ceocomp,ceocomp$PROF>0)
 set.seed(21066922)
 my.ceo_pos = ceo_pos[sample(nrow(ceo_pos),60),]   
 my.ceo_pos 
-```
-### a)
-Let's run the model:
-```{r}
 comp <- my.ceo_pos$COMP
 x1 <- my.ceo_pos$AGE
 x2 <- my.ceo_pos$EDUCATN
@@ -121,25 +43,18 @@ x8 <- my.ceo_pos$PCNTOWN
 x9 <- my.ceo_pos$PROF
 fullmodel <- lm(comp ~ x1+x2+x3+x4+x5+x6+x7+x8+x9)
 summary(fullmodel)
-```
-### b)
-Let's run the hypothesis test for $\hat \beta = \vec 0$
-```{r}
+
+#b)
+#keep in mind the hypothesis test is for betahat = 0 vector
 r2_full <- summary(fullmodel)$r.squared
 msreg <- r2_full/12
 msres <- (1-r2_full)/47
 1 - pf(msreg/msres,12,47)
-```
-So with a significance level of 0.05, we can conclude with statistical significance that there is at least one explanatory variate that is non-zero, hence contributes to explaining the compensation.
-### c)
-```{r}
-summary(fullmodel)
-```
-i) with beta hat x34 being -289, we say WITHOUT statistical significance(because the p value is 0.23>0.05) that lawyers tend to make $289 000 less than banking background, after factoring the rest of the explanatory variates.
-ii) ceos with sales/marketing background also makes less, at -$56 000, than ones with banking background, accounting for all other explanatory factors. But we're even LESS certain of this estimate, with the p-value at 0.81.
 
-Let's do an additional sum of squares test for the model without industry background as a factor, compared to the full model:
-```{r}
+#c)
+#i) with beta hat x34 being -289, we say WITHOUT statistical significance that lawyers tend to make less than banking background
+#ii) sales also makes less, but we're even LESS certain of this estimate.
+#iii)
 redmodel <- lm(comp ~ x1+x2+x4+x5+x6+x7+x8+x9)
 r2_red  <- summary(redmodel)$r.squared
 
@@ -147,43 +62,302 @@ f_num <- (r2_full - r2_red)/4
 f_den <- (1 - r2_full)/47
 f_stat <- f_num/f_den
 1 - pf(f_stat,4,47)
-```
-Comparing it to the anova test, we find that the test comes back very similar:
-```{r}
+#iv)
 anova(redmodel,fullmodel)
+#d)
+summary(redmodel)
+#i) they are all correlated, as a long EXPER certainly implies longer TENURE and AGE
+#ii) 
+pairs(cbind(x1,x4,x5))
+#iii)
+agemodel <- lm(x1~x2+x4+x5+x6+x7+x8+x9)
+summary(agemodel)
+VIF <- 1/(1-0.2956)
+#its ok
+#e)
+new_x <- data.frame(x1=48,x2=1,x4=14,x5=3,x6=3100,x7=2.1,x8=1.1,x9=172)
+predict(redmodel,new_x,interval='prediction',level=.95)
 ```
-Which means that after accounting for the other explantory variates, we can't conclude the CEO's background has much effect on the comp.
-# d)
-now let's focus on the reduced model:
+
+# FROM HERE ON IS THE START OF A3
+
+# Question 1
+
+The residual vs fitted plot is fairly regular, nothing too out of the blue. Some outliers, but that's to be expected.
+
 ```{r}
+plot(redmodel, which = 1)
+```
+
+The QQ is also rather normal, hinting at a slight right skew, but overall I think it's meets expectations of being roughly normally distributed.
+
+```{r}
+plot(redmodel, which = 2)
+```
+
+# Question 2
+
+### a)
+
+```{r}
+hist(comp)
+```
+
+it has a heavy right tail, so using ln as a transform would send the outliers a lot closer to the rest of the data.
+
+### b)
+
+```{r}
+lncomp <- log(comp)
+lnredmodel <- lm(lncomp ~ x1+x2+x4+x5+x6+x7+x8+x9)
+```
+
+### c)
+
+```{r}
+summary(lnredmodel)
 summary(redmodel)
 ```
-Where we notice that the relation between age, tenure, and experience may be problematic because they are all correlated, as a long EXPER certainly implies longer TENURE and AGE.
 
-Let's see the pairs chart:
+we see a very slight improvement in the model in which we applied log to the compensation.
+
+### d)
+
 ```{r}
-pairs(cbind(x1,x4,x5))
+plot(lnredmodel, which = 1)
 ```
-Where we see a slight linear relation between the 3 variables in question. So I'll say that multicollinearity may be an issue.
-Let's test with the VIF for age:
+
+I personally don't see a substantial difference in the res vs the fitted, but that's about normal for my human eyes.
+
 ```{r}
-agemodel <- lm(x1~x2+x4+x5+x6+x7+x8+x9)
-r2 <- summary(agemodel)$r.squared
-VIF <- 1/(1-r2)
-VIF
+plot(lnredmodel, which = 2)
 ```
-Which honestly is not that bad, so I retract my statement from before, as the VIF is fairly below 10. In case the assignment was looking for ONLY the 3 variables, here is that VIF:
+
+Here I notice that the skew is gone from before, but there is slightly lighter tails than expected of a normal distribution.
+
+# Question 3
+
+### a)
+
 ```{r}
-ageredmodel <- lm(x1~x4+x5)
-r2 <- summary(ageredmodel)$r.squared
-VIF <- 1/(1-r2)
-VIF
+plot(x6,lncomp)
 ```
-Which it seems like it doesn't make much of a difference.
+
+Given the sales and log of compensation, it doesn't really seem like a linear model would be a good fit, the data doesn't seem to have a strong linear relation.
+
+### b)
+
+```{r}
+plot(log(x6),lncomp)
+```
+
+We see a slightly better linear relation, but it's still not particularly clear, especially on the far right side.
+
+### c)
+
+```{r}
+lnmodel <- lm(lncomp ~ log(x6)+log(x7)+log(x8)+log(x9))
+summary(lnmodel)  
+```
+
+We can notice that the log of x7(Val), and log of x8(PCTOWN) have p values of significance, so we expect that these would explain more of the variation than the other 2 variates. Overall, it is a weaker model, with a smaller adj R^2 than the model previously, which only took the log of the response variate.
+
+# Question 4
+
+```{r}
+plot(lnmodel, which = 1)
+```
+
+It is getting marginally better, with a flatter line, concentrating at 0.
+
+```{r}
+plot(lnmodel, which = 2)
+```
+The tails now are not as light as previous, so that's a bit more adequate.
+
+# Question 5
+
+```{r}
+plot(fitted(lnmodel),rstudent(lnmodel))
+abline(h=0)
+```
+
+We see that it is really similar to the previous plot.
+
+```{r}
+qqnorm(rstudent(lnmodel)); qqline(rstudent(lnmodel))
+```
+Same here, it is rather similar.
+
+# Question 6
+
+remember that p = 4, n = 60, so we consider 'high-leverage' to be:
+
+```{r}
+highlev = 2*(4+1)/60
+highlev
+```
+```{r}
+plot(hatvalues(lnmodel))
+abline(h = highlev)
+```
+We see there is indeed a big outlier. Let's investigate.
+
+# Question 7
+
+Here is the highest leverage index:
+
+```{r}
+which.max(hatvalues(lnmodel))
+```
+
+Here are the plots of the explanatory variates with the 29th index highlighted:
+
+```{r}
+plot(log(x6))
+points(29,log(x6)[29], col = "red", pch = 16, cex = 2.5)
+```
+
+
+```{r}
+plot(log(x7))
+points(29,log(x7)[29], col = "red", pch = 16, cex = 2.5)
+```
+
+
+```{r}
+
+plot(log(x8))
+points(29,log(x8)[29], col = "red", pch = 16, cex = 2.5)
+```
+
+
+```{r}
+plot(log(x9))
+points(29,log(x9)[29], col = "red", pch = 16, cex = 2.5)
+```
+
+I'd say that only in the log(x9), log of the profit, do we see index 29 being particularly outlier-ish.
+
+# Question 8
+
+```{r}
+plot(lnmodel, which = 4)
+```
+
+We see that the 29th index is indeed the most influential, but according to our general rule in class, it isn't greater than 1, so we don't conclude it has 'high' influence, even though comparatively it has the highest influence.
+
+# Question 9
+
+### a)
+let's start with the full model from question 3:
+
+```{r}
+summary(lnmodel)
+```
+
+Since log(x9) has the highest p value that is also above 0.15, we drop it:
+
+```{r}
+droppedx9 <- lm(lncomp ~ log(x6)+log(x7)+log(x8))
+summary(droppedx9)
+```
+
+Since log(x6) has the highest p value above 0.15, we drop it:
+
+```{r}
+droppedx9x6 <- lm(lncomp ~ log(x7)+log(x8))
+summary(droppedx9x6)
+```
+
+Since no other explanatory variate is above 0.15, we keep this as our model.
+
+### b)
+
+```{r}
+lnX <- as.matrix(cbind(log(x6),log(x7),log(x8),log(x9)))
+cp_out    <- leaps(x = lnX, y = lncomp, method = "Cp",    nbest = 1)
+adjr2_out <- leaps(x = lnX, y = lncomp, method = "adjr2", nbest = 1)
+cp_out$Cp    
+cp_out$which  
+adjr2_out$adjr2 
+```
+
+We pick log(x6), log(x7) and log(x8), bc its the highest adjR^2(barely though) that fits our mallows cp of being strictly less than k+1.
+
+```{r}
+pickedmodel <- lm(lncomp ~ log(x6)+log(x7)+log(x8))
+```
+
+### c)
+
+```{r}
+n <- length(lncomp)
+mse_full <- summary(lnmodel)$sigma^2   
+sse_reduced <- sum(resid(pickedmodel)^2)  
+k <- 3+1                                
+
+Cp_check <- sse_reduced/mse_full - (n - 2*k)
+Cp_check
+
+```
+
+Which is the same mallows cp as expected.
+
+### d) 
+
+```{r}
+summary(pickedmodel)
+summary(droppedx9x6)
+```
+
+they are slightly different, but honestly its the exact same comparision made with the leaps function, with both models fitting our mallows cp criteria. Our picked model has 0.0001 more adj R^2 value, which is basically a negligible difference in my opinion.
+
 ### e)
-Let's predict a new CEO's comp:
+
+```{r}
+anova(pickedmodel,lnmodel)
+```
+
+From the test, we cant really say with confidence the dropped log(x9) variate, the log of the profit of the company, contributed significantly to the log of the CEO compensation.
+
+### f)
+
+```{r}
+plot(fitted(pickedmodel), rstudent(pickedmodel))
+abline(h = 0)
+```
+
+Once again, very similar res vs fitted values as previous.
+
+```{r}
+qqnorm(rstudent(pickedmodel)); qqline(rstudent(pickedmodel))
+```
+
+Very close to normal distribution, still with a little light of tails, though.
+
+### g)
+
+```{r}
+new_lnx <- data.frame(x6=3100,x7=2.1,x8=1.1)
+exp(predict(pickedmodel,new_lnx,interval='prediction',level=.95))
+```
+
+with a compensation of 1.5 million, we can now conclude that the ceo is being paid a little too much, given our model, and what we expected. As for the interval, it is tigher than the previous, as shown here:
+
 ```{r}
 new_x <- data.frame(x1=48,x2=1,x4=14,x5=3,x6=3100,x7=2.1,x8=1.1,x9=172)
 predict(redmodel,new_x,interval='prediction',level=.95)
 ```
-We can say that the comp of 1.5 million is fairly reasonable, if not a little high. 1500 is still within the 95% prediction interval, so I'd say it is reasonable consistent with the other CEOs' comps.
+
+So we went from a width of around 2000, to a width of around 1200, which is certainly a increase in certainty.
+
+
+
+
+
+
+
+
+
+

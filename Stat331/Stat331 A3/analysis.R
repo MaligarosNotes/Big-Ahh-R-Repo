@@ -110,12 +110,18 @@ highlev = 2*(4+1)/60
 abline(h = highlev)
 
 #7.
-hatvalues(lnmodel)[hatvalues(lnmodel)>0.4]
+which.max(hatvalues(lnmodel))
 #29 is high lev
 plot(log(x6))
+points(29,log(x6)[29], col = "red", pch = 16, cex = 2.5)
 plot(log(x7))
+points(29,log(x7)[29], col = "red", pch = 16, cex = 2.5)
 plot(log(x8))
+points(29,log(x8)[29], col = "red", pch = 16, cex = 2.5)
 plot(log(x9))
+points(29,log(x9)[29], col = "red", pch = 16, cex = 2.5)
+#honestly the points arent too extreme, so it have high lev but medium influence?
+
 #8.
 plot(lnmodel, which = 4)
 #to no surprise, 29 is highest cooks, but according to the general rules, nothing is above 1, hence nothing is too strongly influencial
@@ -138,30 +144,34 @@ cp_out
 cp_out$Cp    
 cp_out$which  
 adjr2_out$adjr2 
-#to little surprise, we pick log(x7) and log(x8), bc its the lowest adjR^2 that fits our mallows cp
+#to little surprise, we pick log(x6), log(x7) and log(x8), bc its the highest adjR^2 that fits our mallows cp
+pickedmodel <- lm(lncomp ~ log(x6)+log(x7)+log(x8))
 
 #c)
 n <- length(lncomp)
 mse_full <- summary(lnmodel)$sigma^2   
-sse_reduced <- sum(resid(droppedx9x6)^2)  
-p <- 3                                   
+sse_reduced <- sum(resid(pickedmodel)^2)  
+p <- 4                                  
 
 Cp_check <- sse_reduced/mse_full - (n - 2*p)
 Cp_check
 
-#d) i mean they are the exact same model, idk what u want from me
+#d) 
+summary(pickedmodel)
+summary(droppedx9x6)
+#they are slightly different, but honestly its the exact same comparision made with the leaps function so idk what u want with me. 
 
 #e)
-anova(droppedx9x6,lnmodel)
-#we cant really say with confidence the dropped x6 and x9 variates contributed significantly to CEO comp
+anova(pickedmodel,lnmodel)
+#we cant really say with confidence the dropped x9 variates contributed significantly to CEO comp
 
 #f)
-plot(fitted(droppedx9x6), rstudent(droppedx9x6))
+plot(fitted(pickedmodel), rstudent(pickedmodel))
 abline(h = 0)
-qqnorm(rstudent(droppedx9x6)); qqline(rstudent(droppedx9x6))
+qqnorm(rstudent(pickedmodel)); qqline(rstudent(pickedmodel))
 #roughly normal, good enuf ig
 
 #g)
-new_lnx <- data.frame(x7=log(2.1),x8=log(1.1))
-exp(predict(droppedx9x6,new_lnx,interval='prediction',level=.95))
-
+new_lnx <- data.frame(x6=3100,x7=2.1,x8=1.1)
+exp(predict(pickedmodel,new_lnx,interval='prediction',level=.95))
+#
