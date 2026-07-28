@@ -115,7 +115,7 @@ hatvalues(lnmodel)[hatvalues(lnmodel)>0.4]
 plot(log(x6))
 plot(log(x7))
 plot(log(x8))
-plot(log(x9),)
+plot(log(x9))
 #8.
 plot(lnmodel, which = 4)
 #to no surprise, 29 is highest cooks, but according to the general rules, nothing is above 1, hence nothing is too strongly influencial
@@ -134,7 +134,34 @@ summary(droppedx9x6)
 lnX <- as.matrix(cbind(log(x6),log(x7),log(x8),log(x9)))
 cp_out    <- leaps(x = lnX, y = lncomp, method = "Cp",    nbest = 1)
 adjr2_out <- leaps(x = lnX, y = lncomp, method = "adjr2", nbest = 1)
-
+cp_out 
 cp_out$Cp    
 cp_out$which  
 adjr2_out$adjr2 
+#to little surprise, we pick log(x7) and log(x8), bc its the lowest adjR^2 that fits our mallows cp
+
+#c)
+n <- length(lncomp)
+mse_full <- summary(lnmodel)$sigma^2   
+sse_reduced <- sum(resid(droppedx9x6)^2)  
+p <- 3                                   
+
+Cp_check <- sse_reduced/mse_full - (n - 2*p)
+Cp_check
+
+#d) i mean they are the exact same model, idk what u want from me
+
+#e)
+anova(droppedx9x6,lnmodel)
+#we cant really say with confidence the dropped x6 and x9 variates contributed significantly to CEO comp
+
+#f)
+plot(fitted(droppedx9x6), rstudent(droppedx9x6))
+abline(h = 0)
+qqnorm(rstudent(droppedx9x6)); qqline(rstudent(droppedx9x6))
+#roughly normal, good enuf ig
+
+#g)
+new_lnx <- data.frame(x7=log(2.1),x8=log(1.1))
+exp(predict(droppedx9x6,new_lnx,interval='prediction',level=.95))
+
