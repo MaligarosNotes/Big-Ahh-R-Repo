@@ -1,0 +1,23 @@
+---
+title: "ITR interval censored"
+author: "Milagro Chen (21066922)"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: no
+  html_document:
+    toc: yes
+  word_document: default
+---
+
+# Set up
+
+Here are the libraries used:
+
+```{r}
+library(data.table)
+library(tidyverse)
+library(leaps)
+```
