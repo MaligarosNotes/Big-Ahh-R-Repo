@@ -22,8 +22,6 @@ my_qres <- function(Y,mu,distribution,m=NULL,k=NULL,make.plot=FALSE){
   u <- runif(length(mu), a, b)
   residuals <- qnorm(u)
   if (make.plot){
-    qqnorm(residuals)
-    qqline(residuals)
     plot(mu,residuals)
   }
   return(residuals)
